@@ -1,11 +1,20 @@
 import platform
 import subprocess
 import tkinter as tk
+import qrcode
+from PIL import ImageTk
+import psutil
+import os
+import signal
 
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("WiFi Hotspot Creator")
+        
+
+        self.subprocs = []
+        self.threads = []
 
         # Create input fields
         ssid_label = tk.Label(self, text="SSID:")
@@ -21,7 +30,17 @@ class App(tk.Tk):
         # Create button to start hotspot
         start_button = tk.Button(self, text="Start Hotspot", command=self.start_hotspot)
         start_button.grid(row=2, column=0, columnspan=2)
-
+    def __del__(self):
+        self.lxpro.send_signal(signal.SIGINT)
+        self.lxpro.wait()
+        # Terminate any running subprocesses or threads
+        for proc in self.subprocs:
+            proc.terminate()
+        for thread in self.threads:
+            thread.join()
+        
+        
+        
     def start_hotspot(self):
         # Get operating system
         system = platform.system()
@@ -29,6 +48,7 @@ class App(tk.Tk):
         # Get available Wi-Fi interfaces
         if system == "Linux":
             process = subprocess.Popen(["iwconfig"], stdout=subprocess.PIPE)
+            self.subprocs.append(process)
             output, error = process.communicate()
             interfaces = [line.split()[0] for line in output.decode().split("\n") if "IEEE" in line]
             if len(interfaces) == 1:
@@ -36,15 +56,19 @@ class App(tk.Tk):
             else:
                 wifi_interface = tk.simpledialog.askstring("Select Wi-Fi Interface", "Enter the name of the Wi-Fi interface to use:", initialvalue=interfaces[0])
         elif system == "Darwin":
+            
             process = subprocess.Popen(["networksetup", "-listallhardwareports"], stdout=subprocess.PIPE)
+            self.subprocs.append(process)
             output, error = process.communicate()
             interfaces = [line.split()[-1] for line in output.decode().split("\n") if "Wi-Fi" in line]
             wifi_interface = interfaces[0]
         elif system == "Windows":
             process = subprocess.Popen(["netsh", "wlan", "show", "drivers"], stdout=subprocess.PIPE)
+            self.subprocs.append(process)
             output, error = process.communicate()
             if "Hosted network supported  : Yes" in output.decode():
                 process = subprocess.Popen(["netsh", "wlan", "show", "interfaces"], stdout=subprocess.PIPE)
+                self.subprocs.append(process)
                 output, error = process.communicate()
                 interfaces = [line.split(":")[-1].strip() for line in output.decode().split("\n") if "Name" in line]
                 wifi_interface = interfaces[0]
@@ -62,19 +86,25 @@ class App(tk.Tk):
         # Create hotspot
         if system == "Linux":
             command = f"sudo ifconfig {wifi_interface} down"
-            subprocess.Popen(command.split())
-            command = f"sudo bash lnxrouter --ap  {wifi_interface} {ssid} -p {password} -c 6"
-            subprocess.Popen(command.split())
+            process = subprocess.Popen(command.split())
+            self.subprocs.append(process)
+            command = f"sudo bash lnxrouter.sh --ap  {wifi_interface} {ssid} -p {password} --virt-name server"
+            self.lxpro =subprocess.Popen(command.split())
+            self.subprocs.append(self.lxpro)
             command = f"sudo ifconfig {wifi_interface} up"
             subprocess.Popen(command.split())
         elif system == "Darwin":
             command = f"sudo /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -z && sudo /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -P createNetwork {ssid} {password} -I {wifi_interface}"
-            subprocess.Popen(command, shell=True)
+            process =subprocess.Popen(command, shell=True)
+            self.subprocs.append(process)
         elif system == "Windows":
             command = f"netsh wlan set hostednetwork mode=allow ssid={ssid} key={password}"
-            subprocess.Popen(command.split())
+            process = subprocess.Popen(command.split())
+            self.subprocs.append(process)
             command = f"netsh wlan start hostednetwork"
-            subprocess.Popen(command.split())
+            process = subprocess.Popen(command.split())
+            self.subprocs.append(process)
+            
 
 if __name__ == "__main__":
     app = App()
