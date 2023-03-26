@@ -5,16 +5,21 @@ import platform
 import signal
 from time import sleep
 from tkinter import simpledialog
+import os
 
 class HotspotApp(tk.Tk):
     def __init__(self):
         super().__init__()
+        
         self.title("Hotspot App")
         self.geometry("300x250")
         self.create_widgets()
         self.subprocs = []
         self.threads = []
+        self.hotspot = False
+        self.wifi = False
     def __del__(self):
+
         self.lnproc.send_signal(signal.SIGINT)
         self.lnproc.wait()
         # Terminate any running subprocesses or threads
@@ -63,19 +68,27 @@ class HotspotApp(tk.Tk):
             self.connect_button.config(text="Connect to Wi-Fi", state="normal")
     
     def connect_command(self):
-        ssid = self.ssid_entry.get().strip()
+        self.ssid = self.ssid_entry.get().strip()
         password = self.password_entry.get().strip()
         
         if self.toggle_var.get():
-            if ssid == "":
+            if self.ssid == "":
                 messagebox.showerror("Error", "Please enter the SSID.")
             else:
-                self.connect_to_wifi(ssid)
+                self.connect_to_wifi(self.ssid)
         else:
-            if ssid == "" or password == "":
+            if self.ssid == "" or password == "":
                 messagebox.showerror("Error", "Please enter the SSID and password.")
             else:
-                self.start_hotspot()
+                if self.hotspot:
+                    self.hotspot =False
+                    self.stop_hotspot()
+                    self.connect_button.config(text="Create Hotspot", state="normal")
+                else:
+                    self.hotspot =True
+                    self.start_hotspot()
+                    self.connect_button.config(text="Stop Hotspot", state="normal")
+
     
     # def create_hotspot(self, ssid, password):
     #     cmd = f"command to create hotspot {ssid} {password}".split()
@@ -83,32 +96,36 @@ class HotspotApp(tk.Tk):
     #         messagebox.showinfo("Success", "Hotspot created successfully!")
     #     else:
     #         messagebox.showerror("Error", "Failed to create hotspot.")
-    def check_status(self):
+    def check_hotspot_status(self):
         if self.lnproc.poll() is None:
             # subprocess is still running
-            print("running")
-            output, error = self.lnproc.communicate()
-            print(output)
-            print(error)
-            self.after(5000, self.check_status)
+            # self.hotspot =True
+
+            self.after(5000, self.check_hotspot_status)
         else:
             # subprocess has finished
+            # self.hotspot =False
             output, error = self.lnproc.communicate()
             self.connect_button.config(state="normal")
             self.toggle_switch.config(state="normal")
             self.ssid_entry.config(state="normal")
             self.password_entry.config(state="normal")
-            self.toggle_var.set(not self.toggle_var.get())
+            # self.toggle_var.set(not self.toggle_var.get())
             if error:
                 messagebox.showerror("Error", error.decode("utf-8"))
             else:
                 messagebox.showinfo("Success", output.decode("utf-8"))
     def start_hotspot(self):
+        self.connect_button.config(state="disabled")
+        self.toggle_switch.config(state="disabled")
+        self.ssid_entry.config(state="disabled")
+        self.password_entry.config(state="disabled")
         # Get operating system
         system = platform.system()
 
         # Get available Wi-Fi interfaces
         if system == "Linux":
+            
             process = subprocess.Popen(["iwconfig"], stdout=subprocess.PIPE)
             self.subprocs.append(process)
             output, error = process.communicate()
@@ -144,21 +161,32 @@ class HotspotApp(tk.Tk):
         # Get input values
         ssid = self.ssid_entry.get().strip()
         password = self.password_entry.get().strip()
+        self.i = wifi_interface
 
         # Create hotspot
         if system == "Linux":
             command = f"sudo ifconfig {wifi_interface} down"
             process = subprocess.Popen(command.split())
+            output, error = process.communicate()
+            sleep(5)
+            print(f"Stoping {wifi_interface}")
             self.subprocs.append(process)
             output, error = process.communicate()
             command = f"sudo bash lnxrouter.sh --ap  {wifi_interface} {ssid} -p {password} --virt-name server"
-            self.lnproc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-            self.subprocs.append(self.lnproc)
-            print("done")
+            # self.lnproc = subprocess.call(command.split())
+            # self.subprocs.append(self.lnproc)
+            self.lnproc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            print("lnxrouter started")
+            sleep(5)
             command = f"sudo ifconfig {wifi_interface} up"
             process = subprocess.Popen(command.split())
             output, error = process.communicate()
-            self.after(5000, self.check_status)
+            self.subprocs.append(process)
+            print(f"Starting {wifi_interface}")
+            
+
+            self.after(5000, self.check_hotspot_status)
+            
         elif system == "Darwin":
             command = f"sudo /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -z && sudo /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -P createNetwork {ssid} {password} -I {wifi_interface}"
             process =subprocess.Popen(command, shell=True)
@@ -174,7 +202,29 @@ class HotspotApp(tk.Tk):
             output, error = process.communicate()
             self.subprocs.append(process)
             
-
+    def stop_hotspot(self):
+        # self.lnproc.send_signal(signal.SIGINT)
+        # self.lnproc.wait()
+        os.kill(self.lnproc.pid,signal.SIGINT)
+        # os.killpg(os.getpgid(self.lnproc.pid), signal.SIGINT)
+        self.lnproc.terminate()
+        print("terminated")
+        command = f"sudo ifconfig {self.i} down"
+        process = subprocess.Popen(command.split())
+        command = f"sudo ifconfig server down"
+        process = subprocess.Popen(command.split())
+        command = f"sudo bash lnxrouter.sh --stop {self.i}"
+        process = subprocess.Popen(command.split())
+        command = f"sudo bash lnxrouter.sh --stop server"
+        process = subprocess.Popen(command.split())
+        command = f"sudo ifconfig {self.i} up"
+        process = subprocess.Popen(command.split())
+        self.connect_button.config(text="Create Hotspot", state="normal")
+        self.connect_button.config(state="normal")
+        self.toggle_switch.config(state="normal")
+        self.ssid_entry.config(state="normal")
+        self.password_entry.config(state="normal")
+        print("done")
     
     def connect_to_wifi(self, ssid):
         cmd = f"command to connect to wifi {ssid}".split()
