@@ -1,9 +1,5 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QGroupBox, QSplitter
-import sys
-import logging
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QButtonGroup, QHBoxLayout, QRadioButton
-from PyQt6.QtCore import Qt, QProcess
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -38,7 +34,6 @@ class MainWindow(QMainWindow):
         self.clientButton.clicked.connect(self.on_clientButton_clicked)
         self.serialButton.clicked.connect(self.on_serialButton_clicked)
         
-        
         # Create the right side text
         self.right_text = QLabel("This is the default text.")
         
@@ -70,45 +65,6 @@ class MainWindow(QMainWindow):
     
     def on_serialButton_clicked(self):
         self.right_text.setText("This is text for button 3.")
-    def serverLayout(self):
-        self.form_layout = QFormLayout()
-
-        # Create the input fields for the form
-        self.server_type_combo = QComboBox()
-        self.server_type_combo.addItems(["HTTP", "FTP", "SSH"])
-        self.server_type_combo.setCurrentIndex(0)
-        # self.server_type_combo.currentIndexChanged.connect(self.handle_server_type_change)
-
-        self.port_input = QLineEdit()
-        self.port_input.setText("8080")
-
-        self.local_host_radio = QRadioButton("Local Host")
-        self.ngrok_radio = QRadioButton("Ngrok")
-
-        # Create a button group for the Local Host and Ngrok buttons
-        self.host_button_group = QButtonGroup()
-        self.host_button_group.addButton(self.local_host_radio)
-        self.host_button_group.addButton(self.ngrok_radio)
-        self.local_host_radio.setChecked(True)
-
-        self.create_server_button = QPushButton("Create Server")
-        self.create_server_button.clicked.connect(self.create_server)
-
-        # Add the input fields to the form layout
-        self.form_layout.addRow(QLabel("Server Type:"), self.server_type_combo)
-        self.form_layout.addRow(QLabel("Port:"), self.port_input)
-
-        # Create a horizontal layout for the Local Host and Ngrok buttons
-        self.host_button_layout = QHBoxLayout()
-        self.host_button_layout.addWidget(self.local_host_radio)
-        self.host_button_layout.addWidget(self.ngrok_radio)
-        self.form_layout.addRow(QLabel("Server Host:"), self.host_button_layout)
-
-        self.form_layout.addRow(QLabel(""), self.create_server_button)
-
-        # Create the log window
-        self.console = QTextEdit()
-        self.console.setReadOnly(True)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
