@@ -1,8 +1,7 @@
 import sys
 import logging
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QButtonGroup, QHBoxLayout, QRadioButton
-from PyQt6.QtCore import Qt, QProcess
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QGroupBox, QSplitter
+from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout,QGroupBox, QSplitter, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QButtonGroup, QHBoxLayout, QRadioButton
+from PyQt6.QtCore import QProcess
 
 
 class QTextEditHandler(logging.Handler):
@@ -50,7 +49,7 @@ class MainWindow(QMainWindow):
         
         # Create the right side text
         self.right_text = QLabel("This is the default text.")
-        self.serverConf()
+        
         
         # Create the main layout
         self.main_layout = QHBoxLayout()
@@ -58,7 +57,7 @@ class MainWindow(QMainWindow):
         # Create a splitter to separate the sidebar from the main window
         self.splitter = QSplitter()
         self.splitter.addWidget(self.left_bar_group)
-        self.splitter.addWidget(self.form_widget)
+        self.splitter.addWidget(self.right_text)
         self.splitter.setSizes([100, 300])
         self.main_layout.addWidget(self.splitter)
         
@@ -69,7 +68,7 @@ class MainWindow(QMainWindow):
         
         # Set the window properties
         self.setWindowTitle("PyQt6 App")
-        self.setGeometry(100, 100, 500, 300)
+        self.setGeometry(100, 100, 1000, 600)
         self.show()
 
     def serverConf(self):
@@ -154,10 +153,15 @@ class MainWindow(QMainWindow):
 
     
     def on_serverButton_clicked(self):
-        self.right_text.setText("This is text for button 1.")
+        # self.right_text.setText("This is text for button 1.")
+        # self.splitter.replaceWidget(1,self.right_text)
+        self.serverConf()
+        self.splitter.replaceWidget(1,self.form_widget)
+        
     
     def on_clientButton_clicked(self):
         self.right_text.setText("This is text for button 2.")
+        self.splitter.replaceWidget(1,self.right_text)
     
     def on_serialButton_clicked(self):
         self.right_text.setText("This is text for button 3.")
