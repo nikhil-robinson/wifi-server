@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QApplication, QComboBox, QDialog, QFormLayout, QHBox
 from PyQt6 import QtWidgets
 
 
+
 class SerialTerminal(QDialog):
     def __init__(self):
         super().__init__()
@@ -64,9 +65,10 @@ class SerialTerminal(QDialog):
 
     def connect_or_disconnect(self):
         if not self.connected:
+
             port = self.port_combo.currentText()
             baudrate = int(self.custom_baudrate_input.text() or self.baudrate_combo.currentText())
-            self.serial = serial.Serial(port, baudrate)
+            self.serial = serial.Serial(port, baudrate,timeout=1)
             self.connect_button.setText("Disconnect")
             self.connected = True
 
@@ -74,10 +76,14 @@ class SerialTerminal(QDialog):
             self.serial_thread = threading.Thread(target=self.read_serial, daemon=True)
             self.serial_thread.start()
 
+
         else:
+            self.connected = False
+            time.sleep(1)
             self.serial.close()
             self.connect_button.setText("Connect")
             self.connected = False
+
 
     def send(self):
         if self.connected:
@@ -107,11 +113,25 @@ class SerialTerminal(QDialog):
 
             # Sleep for 1 second
             time.sleep(1)
+    # def read_serial(self):
+    #     while self.connected and self.serial.isOpen():
+    #         data = self.serial.readline()
+    #         if data is not None:
+    #             self.console.append(data.decode('utf-8'))
+
     def read_serial(self):
-        while self.connected:
-            data = self.serial.readline()
-            if data is not None:
-                self.console.append(data.decode('utf-8'))
+        while self.connected and self.serial.isOpen():
+            try:
+                if self.serial and self.serial.is_open:
+                    data = self.serial.readline()
+                else:
+                    print("Serial port is not open.")
+                    break
+                if data is not None and type(data) is not None:
+                    self.console.append(data.decode().strip())
+            except Exception as e:
+                print(e)
+                break
 
 
 if __name__ == '__main__':
