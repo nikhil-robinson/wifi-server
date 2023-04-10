@@ -113,25 +113,14 @@ class SerialTerminal(QDialog):
 
             # Sleep for 1 second
             time.sleep(1)
-    # def read_serial(self):
-    #     while self.connected and self.serial.isOpen():
-    #         data = self.serial.readline()
-    #         if data is not None:
-    #             self.console.append(data.decode('utf-8'))
 
+            
     def read_serial(self):
         while self.connected and self.serial.isOpen():
-            try:
-                if self.serial and self.serial.is_open:
-                    data = self.serial.readline()
-                else:
-                    print("Serial port is not open.")
-                    break
-                if data is not None and type(data) is not None:
-                    self.console.append(data.decode().strip())
-            except Exception as e:
-                print(e)
-                break
+            data = self.serial.readline()
+            if data is not None:
+                self.console.append(data.decode().strip())
+
 
 
 if __name__ == '__main__':
