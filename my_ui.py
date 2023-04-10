@@ -125,13 +125,13 @@ class MainWindow(QMainWindow):
     #     # Retrieve the current selected server type
     #     self.server_type = self.server_type_combo.currentText()
 
-    def start_http_server(self):
+    def start_http_server(self,port):
         # Start HTTP server on port 80
         self.process = QProcess(self)
         self.process.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels)
         self.process.readyReadStandardOutput.connect(self.handle_output)
         self.process.finished.connect(self.process_finished)
-        self.process.start("python3", ["-m", "http.server", "1111"])
+        self.process.start("python3", ["-m", "http.server", port])
 
     def handle_output(self):
         # Log output from HTTP server to console
@@ -149,7 +149,7 @@ class MainWindow(QMainWindow):
         self.console.append(f"{self.server_type_combo.currentText()} Server created with {server_host} and port {self.port_input.text()}!")
         if self.server_type_combo.currentText() == "HTTP" and server_host == "Local Host":
             print("HI")
-            self.start_http_server()
+            self.start_http_server(self.port_input.text())
 
     
     def on_serverButton_clicked(self):
