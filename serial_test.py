@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QApplication, QComboBox, QDialog, QFormLayout, QHBox
 from PyQt6 import QtWidgets
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QButtonGroup, QHBoxLayout, QRadioButton
-from PyQt6.QtCore import Qt, QProcess
+from PyQt6.QtCore import Qt, QProcess,QTimer
 
 
 
@@ -72,9 +72,10 @@ class MainWindow(QMainWindow):
         self.serial = None
         self.connected = False
 
-        # Start thread to check for new ports
-        self.ports_thread = threading.Thread(target=self.update_ports_thread, daemon=True)
-        self.ports_thread.start()
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.read_serial)
+
+
 
     def refresh_ports(self):
         ports = [p.device for p in serial.tools.list_ports.comports()]
@@ -86,19 +87,21 @@ class MainWindow(QMainWindow):
 
             port = self.port_combo.currentText()
             baudrate = self.baudrate_combo.currentText()
-            self.serial = serial.Serial(port, baudrate,timeout=1)
+            self.serial = serial.Serial(port, baudrate)
             self.connect_button.setText("Disconnect")
+            self.timer.start(100)
             self.connected = True
 
             # Start thread to read from serial
-            self.serial_thread = threading.Thread(target=self.read_serial, daemon=True)
-            self.serial_thread.start()
+            # self.serial_thread = threading.Thread(target=self.read_serial, daemon=True)
+            # self.serial_thread.start()
 
 
         else:
-            self.connected = False
-            self.serial_thread.join()
+
+            self.timer.stop()
             self.serial.close()
+            self.serial=None
             self.connect_button.setText("Connect")
             self.connected = False
 
@@ -109,34 +112,14 @@ class MainWindow(QMainWindow):
             self.serial.write(data.encode())
             self.send_input.clear()
 
-    def custom_baudrate_changed(self, text):
-        self.baudrate_combo.setEnabled(not bool(text))
-        self.custom_baudrate_input.setEnabled(bool(text))
-
-    def update_ports_thread(self):
-        while True:
-            # Check for new ports
-            current_ports = set(self.port_combo.itemText(i) for i in range(self.port_combo.count()))
-            new_ports = set(p.device for p in serial.tools.list_ports.comports()) - current_ports
-
-            # Add new ports to dropdown
-            if new_ports:
-                self.port_combo.addItems(new_ports)
-
-            # Remove disconnected ports from dropdown
-            disconnected_ports = current_ports - set(p.device for p in serial.tools.list_ports.comports())
-            for port in disconnected_ports:
-                index = self.port_combo.findText(port)
-                self.port_combo.removeItem(index)
-
-            # Sleep for 1 second
-            time.sleep(1)
+   
 
     def read_serial(self):
-        while self.connected:
-            data = self.serial.readline()
-            if data is not None:
-                self.console.append(data.decode().strip())
+        if self.serial and self.serial.in_waiting > 0:
+            # Read data from serial port
+            data = self.serial.readline().decode().strip()
+            # Append data to console
+            self.console.append(data)
 
 
 

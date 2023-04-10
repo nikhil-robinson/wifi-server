@@ -1,6 +1,6 @@
 import sys
 import serial
-from PyQt6.QtWidgets import QApplication, QMainWindow, QTextEdit, QVBoxLayout, QPushButton, QDockWidget, QWidget
+from PyQt6.QtWidgets import QApplication, QMainWindow, QTextEdit, QVBoxLayout, QPushButton, QDockWidget, QWidget, QFormLayout
 from PyQt6.QtCore import QTimer, Qt
 
 class SerialTerminal(QMainWindow):
@@ -18,10 +18,10 @@ class SerialTerminal(QMainWindow):
         self.stop_button = QPushButton('Stop')
         self.stop_button.clicked.connect(self.stop_serial)
 
-        # Create a vertical layout for buttons
-        button_layout = QVBoxLayout()
-        button_layout.addWidget(self.start_button)
-        button_layout.addWidget(self.stop_button)
+        # Create a QFormLayout for buttons
+        button_layout = QFormLayout()
+        button_layout.addRow('Start:', self.start_button)
+        button_layout.addRow('Stop:', self.stop_button)
 
         # Create a QWidget to hold the buttons
         button_widget = QWidget()
