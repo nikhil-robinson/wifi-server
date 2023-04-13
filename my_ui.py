@@ -8,7 +8,7 @@ from PyQt6.QtCore import Qt, QMetaObject, pyqtSlot
 from PyQt6.QtWidgets import QApplication, QComboBox, QDialog, QFormLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTextEdit, QVBoxLayout
 from PyQt6 import QtWidgets
 
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QButtonGroup, QHBoxLayout, QRadioButton,QSizePolicy
+from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QButtonGroup, QHBoxLayout, QRadioButton,QStackedWidget
 from PyQt6.QtCore import Qt, QProcess,QTimer
 
 class QTextEditHandler(logging.Handler):
@@ -25,53 +25,70 @@ class MainWindow(QMainWindow):
         super().__init__()
         
         # Create the left side bar group box
-        self.main_left_bar_group = QGroupBox("Tools")
-        self.main_left_bar_group_layout = QVBoxLayout()
-        self.main_left_bar_group.setLayout(self.main_left_bar_group_layout)
+        self.central_widget = QWidget()
+        self.setCentralWidget(self.central_widget)
 
-        
-        
-        # Create the buttons
-        self.main_serverButton = QPushButton("Server")
-        self.main_clientButton = QPushButton("Client")
-        self.main_serialButton = QPushButton("Serial")
-        self.main_networkButton = QPushButton("Network")
-        self.main_securityButton = QPushButton("Security")
-        self.main_aboutButton = QPushButton("About")
-        
-        # Add the buttons to the left side bar group box
-        self.main_left_bar_group_layout.addWidget(self.main_serverButton)
-        self.main_left_bar_group_layout.addWidget(self.main_clientButton)
-        self.main_left_bar_group_layout.addWidget(self.main_serialButton)
-
-        self.main_left_bar_group_layout.addWidget(self.main_networkButton)
-        self.main_left_bar_group_layout.addWidget(self.main_securityButton)
-        self.main_left_bar_group_layout.addWidget(self.main_aboutButton)
-        
-        # Connect the buttons to their respective functions
-        self.main_serverButton.clicked.connect(self.on_serverButton_clicked)
-        self.main_clientButton.clicked.connect(self.on_clientButton_clicked)
-        self.main_serialButton.clicked.connect(self.on_serialButton_clicked)
-        
-        # Create the right side text
-        self.main_right_text = QLabel("This is the default text.")
-        
-        
-        # Create the main layout
+        # Create a vertical layout for the main window
         self.main_layout = QHBoxLayout()
+
+        # Create a group box for the left sidebar
+        self.left_bar_group = QGroupBox("Tools")
+        self.left_bar_group_layout = QVBoxLayout()
+        self.left_bar_group.setLayout(self.left_bar_group_layout)
+        self.left_bar_group.setFixedWidth(100)
+
+        # Create buttons for the left sidebar
+        self.server_button = QPushButton("Server")
+        self.client_button = QPushButton("Client")
+        self.serial_button = QPushButton("Serial")
+        self.network_button = QPushButton("Network")
+        self.security_button = QPushButton("Security")
+        self.about_button = QPushButton("About")
+
+        # Add buttons to the left sidebar group box
+        self.left_bar_group_layout.addWidget(self.server_button)
+        self.left_bar_group_layout.addWidget(self.client_button)
+        self.left_bar_group_layout.addWidget(self.serial_button)
+        self.left_bar_group_layout.addWidget(self.network_button)
+        self.left_bar_group_layout.addWidget(self.security_button)
+        self.left_bar_group_layout.addWidget(self.about_button)
+
+        # Create a label for the right side text
+        self.right_text = QLabel("This is the default text.")
+        self.serverConf()
+        self.serialConf()
+
+        self.stacked_widget = QStackedWidget()
+
+        # Create widgets to be displayed in the stacked widget
+        self.server_widget = QLabel("Server Widget")
+        self.client_widget = QLabel("Client Widget")
+        self.serial_widget = QLabel("Serial Widget")
+        self.network_widget = QLabel("Network Widget")
+        self.security_widget = QLabel("Security Widget")
+        self.about_widget = QLabel("About Widget")
+
+        # Add widgets to the stacked widget
+        self.stacked_widget.addWidget(self.server_form_widget)
+        self.stacked_widget.addWidget(self.client_widget)
+        self.stacked_widget.addWidget(self.serial_form_widget)
+        self.stacked_widget.addWidget(self.network_widget)
+        self.stacked_widget.addWidget(self.security_widget)
+        self.stacked_widget.addWidget(self.about_widget)
         
-        # Create a main_splitter to separate the sidebar from the main window
-        self.main_splitter = QSplitter()
-        
-        self.main_splitter.addWidget(self.main_left_bar_group)
-        self.main_splitter.addWidget(self.main_right_text)
-        self.main_splitter.setSizes([100, 300])
-        self.main_layout.addWidget(self.main_splitter)
- 
+
+        # Add the left sidebar and right text to the main layout
+        self.main_layout.addWidget(self.left_bar_group)
+        self.main_layout.addWidget(self.stacked_widget)
+
+
         # Set the main layout as the central widget
-        self.main_central_widget = QWidget()
-        self.main_central_widget.setLayout(self.main_layout)
-        self.setCentralWidget(self.main_central_widget)
+        self.central_widget.setLayout(self.main_layout)
+
+        # Connect the buttons to their respective functions
+        self.server_button.clicked.connect(self.on_serverButton_clicked)
+        self.client_button.clicked.connect(self.on_clientButton_clicked)
+        self.serial_button.clicked.connect(self.on_serialButton_clicked)
         
         # Set the window properties
         self.setWindowTitle("PyQt6 App")
@@ -103,7 +120,7 @@ class MainWindow(QMainWindow):
         self.server_local_host_radio.setChecked(True)
 
         self.create_server_button = QPushButton("Create Server")
-        self.create_server_button.clicked.connect(self.create_server)
+        self.create_server_button.clicked.connect(self.http_create_server)
 
         # Add the input fields to the form layout
         self.server_form_layout.addRow(QLabel("Server Type:"), self.server_type_combo)
@@ -127,6 +144,7 @@ class MainWindow(QMainWindow):
         server_log_handler = QTextEditHandler(self.server_console)
         logging.getLogger().addHandler(server_log_handler)
         logging.getLogger().setLevel(logging.DEBUG)
+        self.isSERVERstarted = False
 
     # def handle_server_type_change(self, index):
     #     # Retrieve the current selected server type
@@ -134,47 +152,62 @@ class MainWindow(QMainWindow):
 
     def start_http_server(self,serial_port):
         # Start HTTP server on serial_port 80
+        
         self.http_process = QProcess(self)
         self.http_process.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels)
-        self.http_process.readyReadStandardOutput.connect(self.handle_output)
-        self.http_process.finished.connect(self.process_finished)
+        self.http_process.readyReadStandardOutput.connect(self.http_handle_output)
+        self.http_process.finished.connect(self.http_process_finished)
         self.http_process.start("python3", ["-m", "http.server", serial_port])
+        self.create_server_button.setText("Disconect")
+        self.isSERVERstarted = True
+        
 
-    def handle_output(self):
+        
+
+    def http_handle_output(self):
         # Log http_output from HTTP server to serial_console
         http_output = bytes(self.http_process.readAllStandardOutput()).decode()
         logging.debug(http_output)
 
-    def process_finished(self):
+    def http_process_finished(self):
         # Destroy http_process and print message when finished
-        self.http_process.destroy()
+        self.http_process.terminate()
+        self.http_process.waitForFinished()
         logging.debug("HTTP server stopped")
+        self.isSERVERstarted = False
 
-    def create_server(self):
+    def http_create_server(self):
         # TODO: Implement server creation logic
-        http_server_host = "Local Host" if self.server_local_host_radio.isChecked() else "Ngrok"
-        self.server_console.append(f"{self.server_type_combo.currentText()} Server created with {http_server_host} and serial_port {self.server_port_input.text()}!")
-        if self.server_type_combo.currentText() == "HTTP" and http_server_host == "Local Host":
-            print("HI")
-            self.start_http_server(self.server_port_input.text())
+        if self.isSERVERstarted == False:
+            http_server_host = "Local Host" if self.server_local_host_radio.isChecked() else "Ngrok"
+            self.server_console.append(f"{self.server_type_combo.currentText()} Server created with {http_server_host} and serial_port {self.server_port_input.text()}!")
+            if self.server_type_combo.currentText() == "HTTP" and http_server_host == "Local Host":
+                print("HI")
+                self.start_http_server(self.server_port_input.text())
+                self.isSERVERstarted = True
+                self.create_server_button.setText("Disconnect")
+        else:
+            self.http_process.terminate()
+            self.http_process.waitForFinished()
+            self.create_server_button.setText("Connect")
+            self.isSERVERstarted = False
+            self.server_console.append(f"{self.server_type_combo.currentText()} Server Stoped!")
 
     
     def on_serverButton_clicked(self):
-        # self.main_right_text.setText("This is text for button 1.")
-        # self.main_splitter.replaceWidget(1,self.main_right_text)
-        self.serverConf()
-        self.main_splitter.replaceWidget(1,self.server_form_widget)
+        #hellp
+        self.stacked_widget.setCurrentWidget(self.server_form_widget)
 
         
     
     def on_clientButton_clicked(self):
-        self.main_right_text.setText("This is text for button 2.")
-        self.main_splitter.replaceWidget(1,self.main_right_text)
+        #self.main_right_text.setText("This is text for button 2.")
+        self.stacked_widget.setCurrentWidget(self.client_widget)
     
     def on_serialButton_clicked(self):
-        self.serialConf()
-        #self.main_right_text.setText("This is text for button 3.")
-        self.main_splitter.replaceWidget(1,self.serial_form_widget)
+        self.stacked_widget.setCurrentWidget(self.serial_form_widget)
+
+
 
 
     def serialConf(self):
@@ -320,6 +353,13 @@ class MainWindow(QMainWindow):
                     serial_filtered_lines.append(line)
             serial_filtered_text = '\n'.join(serial_filtered_lines)
             self.serial_console.setPlainText(serial_filtered_text)
+
+    def closeEvent(self, event):
+        # Terminate the process if the window is closed
+        if self.http_process.state() != QProcess.ProcessState.NotRunning:
+            self.http_process.terminate()
+            self.http_process.waitForFinished()
+        super().closeEvent(event)
 
 
 
