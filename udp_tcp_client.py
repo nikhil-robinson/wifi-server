@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QLineEdit, QPushButton, QTextEdit
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QComboBox, QLineEdit, QPushButton, QTextEdit, QFormLayout,QHBoxLayout
 from PyQt6.QtCore import Qt, QIODevice, QByteArray
 from PyQt6.QtNetwork import QUdpSocket, QTcpSocket, QAbstractSocket
 
@@ -7,18 +7,18 @@ class NetworkClientApp(QWidget):
         super().__init__()
 
         # Set up UI components
-        self.protocol_label = QLabel('Protocol:')
         self.protocol_combobox = QComboBox()
         self.protocol_combobox.addItem('UDP')
         self.protocol_combobox.addItem('TCP')
 
-        self.url_label = QLabel('Server Link:')
-        self.url_edit = QLineEdit()
+        self.ip_edit = QLineEdit()
+        self.ip_edit.setPlaceholderText("IP Address")
+        self.port_edit = QLineEdit()
+        self.port_edit.setPlaceholderText("PORT")
 
         self.connect_button = QPushButton('Connect')
         self.connect_button.clicked.connect(self.connect_to_server)
 
-        self.send_label = QLabel('Send Data:')
         self.send_edit = QLineEdit()
 
         self.send_button = QPushButton('Send')
@@ -27,27 +27,23 @@ class NetworkClientApp(QWidget):
         self.console = QTextEdit()
         self.console.setReadOnly(True)
 
+        self.link_layout = QHBoxLayout()
+        self.link_layout.addWidget(self.protocol_combobox)
+        # self.link_layout.addWidget(QLabel("IP :"))
+        self.link_layout.addWidget(self.ip_edit)
+        self.link_layout.addWidget(QLabel(":"))
+        self.link_layout.addWidget(self.port_edit)
+        self.link_layout.addWidget(self.connect_button)
+
         # Set up layout
-        self.layout = QVBoxLayout()
+        self.layout = QFormLayout()
 
-        protocol_layout = QHBoxLayout()
-        protocol_layout.addWidget(self.protocol_label)
-        protocol_layout.addWidget(self.protocol_combobox)
-
-        url_layout = QHBoxLayout()
-        url_layout.addWidget(self.url_label)
-        url_layout.addWidget(self.url_edit)
-
-        send_layout = QHBoxLayout()
-        send_layout.addWidget(self.send_label)
-        send_layout.addWidget(self.send_edit)
-        send_layout.addWidget(self.send_button)
-
-        self.layout.addLayout(protocol_layout)
-        self.layout.addLayout(url_layout)
-        self.layout.addWidget(self.connect_button)
-        self.layout.addLayout(send_layout)
-        self.layout.addWidget(self.console)
+        # self.layout.addRow('Protocol:', self.protocol_combobox)
+        self.layout.addRow(self.link_layout)
+        # self.layout.addRow(self.connect_button)
+        self.layout.addRow('Send Data:', self.send_edit)
+        self.layout.addRow(self.send_button)
+        self.layout.addRow(self.console)
 
         self.setLayout(self.layout)
 
@@ -58,8 +54,9 @@ class NetworkClientApp(QWidget):
             self.socket.close()
 
         protocol = self.protocol_combobox.currentText()
-        url = self.url_edit.text()
-        port = int(url.split(':')[-1])
+        url = self.ip_edit.text()
+        port = self.ip_edit.text()
+        print(f'connectint to {url} : {port}')
 
         if protocol == 'UDP':
             self.socket = QUdpSocket()
