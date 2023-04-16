@@ -121,24 +121,14 @@ class MainWindow(QMainWindow):
         self.server_local_host_radio = QRadioButton("Local Host")
         self.server_ngrok_radio = QRadioButton("Ngrok")
 
-        # Create a button group for the Local Host and Ngrok buttons
-        self.server_host_button_group = QButtonGroup()
-        self.server_host_button_group.addButton(self.server_local_host_radio)
-        self.server_host_button_group.addButton(self.server_ngrok_radio)
-        self.server_local_host_radio.setChecked(True)
 
-        self.create_server_button = QPushButton("Create Server")
+        self.create_server_button = QPushButton("Start Server")
         self.create_server_button.clicked.connect(self.create_server)
 
         # Add the input fields to the form layout
         self.server_form_layout.addRow(QLabel("Server Type:"), self.server_type_combo)
         self.server_form_layout.addRow(QLabel("Port:"), self.server_port_input)
 
-        # Create a horizontal layout for the Local Host and Ngrok buttons
-        self.server_host_button_layout = QHBoxLayout()
-        self.server_host_button_layout.addWidget(self.server_local_host_radio)
-        self.server_host_button_layout.addWidget(self.server_ngrok_radio)
-        self.server_form_layout.addRow(QLabel("Server Host:"), self.server_host_button_layout)
 
         self.server_form_layout.addRow(QLabel(""), self.create_server_button)
 
@@ -166,12 +156,9 @@ class MainWindow(QMainWindow):
         self.http_process.readyReadStandardOutput.connect(self.http_handle_output)
         self.http_process.finished.connect(self.http_process_finished)
         self.http_process.start("python3", ["-m", "http.server", serial_port])
-        self.create_server_button.setText("Disconect")
+        self.create_server_button.setText("Stop Server")
         self.isSERVERstarted = True
         
-
-        
-
     def http_handle_output(self):
         # Log http_output from HTTP server to serial_console
         http_output = bytes(self.http_process.readAllStandardOutput()).decode()
@@ -207,10 +194,10 @@ class MainWindow(QMainWindow):
         self.udp_socket.readyRead.connect(self.udp_receive_data)
     
     def udp_receive_data(self):
-        while self.socket.hasPendingDatagrams():
-            udp_datagram, udp_host, udp_port = self.socket.readDatagram(self.socket.pendingDatagramSize())
-            message = bytes(udp_datagram).decode('utf-8')
-            self.server_console.append(f'Received message: {message} from {udp_host.toString()}:{udp_port}')
+        while self.udp_socket.hasPendingDatagrams():
+            udp_datagram, udp_host, udp_port = self.udp_socket.readDatagram(self.udp_socket.pendingDatagramSize())
+            udp_message = bytes(udp_datagram).decode('utf-8')
+            self.server_console.append(f'Received message: {udp_message} from {udp_host.toString()}:{udp_port}')
 
     def handle_connection(self):
         while self.tcp_server.hasPendingConnections():
@@ -221,28 +208,35 @@ class MainWindow(QMainWindow):
     def create_server(self):
         # TODO: Implement server creation logic
         if self.isSERVERstarted == False:
-            http_server_host = "Local Host" if self.server_local_host_radio.isChecked() else "Ngrok"
-            self.server_console.append(f"{self.server_type_combo.currentText()} Server created with {http_server_host} and serial_port {self.server_port_input.text()}!")
-            if self.server_type_combo.currentText() == "HTTP" and http_server_host == "Local Host":
+            self.server_console.append(f"{self.server_type_combo.currentText()} Server created with port {self.server_port_input.text()}!")
+            if self.server_type_combo.currentText() == "HTTP":
                 print("Http")
                 self.start_http_server(self.server_port_input.text())
                 self.isSERVERstarted = True
-                self.create_server_button.setText("Disconnect")
-            elif self.server_type_combo.currentText() == "TCP" and http_server_host == "Local Host":
+                self.create_server_button.setText("Stop Server")
+                self.server_type_combo.setDisabled(True)
+            elif self.server_type_combo.currentText() == "TCP":
                 print("TCP")
                 self.start_tcp_server()
                 self.isSERVERstarted = True
-                self.create_server_button.setText("Disconnect")
-            elif self.server_type_combo.currentText() == "UDP" and http_server_host == "Local Host":
+                self.create_server_button.setText("Stop Server")
+                self.server_type_combo.setDisabled(True)
+            elif self.server_type_combo.currentText() == "UDP":
                 print("UDP")
                 self.start_udp_server()
                 self.isSERVERstarted = True
-                self.create_server_button.setText("Disconnect")
+                self.create_server_button.setText("Stop Server")
+                self.server_type_combo.setDisabled(True)
 
         else:
-            self.http_process.terminate()
-            self.http_process.waitForFinished()
-            self.create_server_button.setText("Connect")
+            if self.http_process:
+                self.http_process.terminate()
+                self.http_process.waitForFinished()
+            elif self.udp_socket:
+                self.udp_socket.deleteLater()
+            elif self.tcp_server:
+                self.tcp_server.deleteLater()
+            self.create_server_button.setText("Sart Server")
             self.isSERVERstarted = False
             self.server_console.append(f"{self.server_type_combo.currentText()} Server Stoped!")
 
