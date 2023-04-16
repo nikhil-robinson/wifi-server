@@ -142,6 +142,9 @@ class MainWindow(QMainWindow):
         server_log_handler = QTextEditHandler(self.server_console)
         logging.getLogger().addHandler(server_log_handler)
         logging.getLogger().setLevel(logging.DEBUG)
+        self.http_process = None
+        self.udp_socket =None
+        self.tcp_socket = None
         self.isSERVERstarted = False
 
     # def handle_server_type_change(self, index):
@@ -238,6 +241,7 @@ class MainWindow(QMainWindow):
                 self.tcp_server.deleteLater()
             self.create_server_button.setText("Sart Server")
             self.isSERVERstarted = False
+            self.server_type_combo.setDisabled(False)
             self.server_console.append(f"{self.server_type_combo.currentText()} Server Stoped!")
 
     
@@ -403,9 +407,10 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         # Terminate the process if the window is closed
-        if self.http_process.state() != QProcess.ProcessState.NotRunning:
-            self.http_process.terminate()
-            self.http_process.waitForFinished()
+        if self.http_process:
+            if self.http_process.state() != QProcess.ProcessState.NotRunning:
+                self.http_process.terminate()
+                self.http_process.waitForFinished()
         super().closeEvent(event)
 
 
