@@ -54,12 +54,9 @@ class NetworkClientApp(QWidget):
         self.socket = None
 
     def connect_to_server(self):
-        if self.socket is not None and self.socket.isOpen():
-            self.socket.close()
-
         protocol = self.protocol_combobox.currentText()
         url = self.ip_edit.text()
-        port = int(self.ip_edit.text())
+        port = int(self.port_edit.text())
         print(f'connectint to {url} : {port}')
 
         if protocol == 'UDP':
@@ -70,20 +67,14 @@ class NetworkClientApp(QWidget):
         elif protocol == 'TCP':
             self.tcp_socket = QTcpSocket()
             self.tcp_socket.readyRead.connect(self.receive_tcp_data)
-            self.tcp_socket.errorOccurred.connect(self.display_error)
-            if self.tcp_socket.state() == QAbstractSocket.SocketState.ConnectedState:
-                self.tcp_socket.disconnectFromHost()
-
-            if url:
-                self.tcp_socket.connectToHost(url, port)
+            self.tcp_socket.errorOccurred.connect(self.socket_display_error)
+            self.tcp_socket.connectToHost(url, port)
 
     def send_data(self):
-        if self.socket is None or not self.socket.isOpen():
-            self.log_message('Error: Socket is not connected.')
-            return
-
-        
         if self.protocol_combobox.currentText() == 'UDP':
+            if self.udp_socket is None or not self.udp_socket.isOpen():
+                self.log_message('Error: Socket is not connected.')
+                return
             server_address = self.ip_edit.text()
             server_port = int(self.ip_edit.text())
             message = self.send_edit.text()
@@ -103,7 +94,10 @@ class NetworkClientApp(QWidget):
             # Close the socket
             client_socket.close()
         elif self.protocol_combobox.currentText() == 'TCP':
-            message = self.send_edit.text()
+            if self.tcp_socket is None or not self.tcp_socket.isOpen():
+                self.log_message('Error: Socket is not connected.')
+                return
+            message = self.send_edit.text().encode()
             self.tcp_socket.write(QByteArray(message))
             self.tcp_socket.flush()
 
@@ -113,7 +107,7 @@ class NetworkClientApp(QWidget):
             self.log_message(f'Received UDP data from {host.toString()}:{port}: {data.decode()}')
 
     def receive_tcp_data(self):
-        data = self.socket.readAll().data().decode()
+        data = self.tcp_socket.readAll().data().decode()
         self.log_message(f'Received TCP data: {data}')
 
     def handle_socket_error(self, socket_error):
@@ -132,15 +126,15 @@ class NetworkClientApp(QWidget):
         elif selected_option == "TCP":
             self.connect_button.setDisabled(False)
     
-    def display_error(self, socket_error):
+    def socket_display_error(self, socket_error):
         if socket_error == QAbstractSocket.SocketError.ConnectionRefusedError:
-            self.log_output.append("Error: Connection refused. Make sure the server is running.")
+            self.console.append("Error: Connection refused. Make sure the server is running.")
         elif socket_error == QAbstractSocket.SocketError.HostNotFoundError:
-            self.log_output.append("Error: Host not found. Please check the server IP address.")
+            self.console.append("Error: Host not found. Please check the server IP address.")
         elif socket_error == QAbstractSocket.SocketError.SocketTimeoutError:
-            self.log_output.append("Error: Connection timed out.")
+            self.console.append("Error: Connection timed out.")
         else:
-            self.log_output.append(f"Error: {self.tcp_socket.errorString()}")
+            self.console.append(f"Error: {self.tcp_socket.errorString()}")
 
 
 
