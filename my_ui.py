@@ -11,6 +11,10 @@ from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QButtonGroup, QHBoxLayout, QRadioButton,QStackedWidget
 from PyQt6.QtCore import Qt, QProcess,QTimer
 
+import sys
+from PyQt6.QtWidgets import QApplication, QMainWindow, QTextEdit
+from PyQt6.QtNetwork import QTcpServer, QTcpSocket, QHostAddress
+
 class QTextEditHandler(logging.Handler):
     def __init__(self, serial_console):
         super().__init__()
@@ -103,7 +107,7 @@ class MainWindow(QMainWindow):
 
         # Create the input fields for the form
         self.server_type_combo = QComboBox()
-        self.server_type_combo.addItems(["HTTP", "FTP", "SSH"])
+        self.server_type_combo.addItems(["HTTP", "UDP", "TCP"])
         self.server_type_combo.setCurrentIndex(0)
         # self.server_type_combo.currentIndexChanged.connect(self.handle_server_type_change)
 
@@ -120,7 +124,7 @@ class MainWindow(QMainWindow):
         self.server_local_host_radio.setChecked(True)
 
         self.create_server_button = QPushButton("Create Server")
-        self.create_server_button.clicked.connect(self.http_create_server)
+        self.create_server_button.clicked.connect(self.create_server)
 
         # Add the input fields to the form layout
         self.server_form_layout.addRow(QLabel("Server Type:"), self.server_type_combo)
@@ -176,16 +180,47 @@ class MainWindow(QMainWindow):
         logging.debug("HTTP server stopped")
         self.isSERVERstarted = False
 
-    def http_create_server(self):
+    def start_tcp_server(self):
+        self.tcp_server = QTcpServer(self)
+        self.tcp_server.listen(QHostAddress("127.0.0.1"), int(self.server_port_input.text()))  # Listen on localhost, port 5000
+        self.tcp_server.newConnection.connect(self.handle_connection)
+
+
+
+    def tcp_receive_data(self):
+        tcp_client_socket = self.sender()
+        tcp_message = tcp_client_socket.readAll().data().decode('utf-8')
+        self.server_console.append(f'Received message: {tcp_message} from {tcp_client_socket.peerAddress().toString()}:{tcp_client_socket.peerPort()}')
+
+    def tcp_client_disconnected(self):
+        tcp_client_socket = self.sender()
+        self.server_console.append(f'Client disconnected: {tcp_client_socket.peerAddress().toString()}:{tcp_client_socket.peerPort()}')
+        tcp_client_socket.deleteLater()
+
+
+
+    def handle_connection(self):
+        while self.tcp_server.hasPendingConnections():
+            tcp_client_socket = self.tcp_server.nextPendingConnection()
+            tcp_client_socket.readyRead.connect(self.tcp_receive_data)
+            tcp_client_socket.disconnected.connect(self.tcp_client_disconnected)
+
+    def create_server(self):
         # TODO: Implement server creation logic
         if self.isSERVERstarted == False:
             http_server_host = "Local Host" if self.server_local_host_radio.isChecked() else "Ngrok"
             self.server_console.append(f"{self.server_type_combo.currentText()} Server created with {http_server_host} and serial_port {self.server_port_input.text()}!")
             if self.server_type_combo.currentText() == "HTTP" and http_server_host == "Local Host":
-                print("HI")
+                print("Http")
                 self.start_http_server(self.server_port_input.text())
                 self.isSERVERstarted = True
                 self.create_server_button.setText("Disconnect")
+            elif self.server_type_combo.currentText() == "TCP" and http_server_host == "Local Host":
+                print("TCP")
+                self.start_tcp_server()
+                self.isSERVERstarted = True
+                self.create_server_button.setText("Disconnect")
+
         else:
             self.http_process.terminate()
             self.http_process.waitForFinished()
