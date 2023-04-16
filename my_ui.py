@@ -15,6 +15,10 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTextEdit
 from PyQt6.QtNetwork import QTcpServer, QTcpSocket, QHostAddress
 
+import sys
+from PyQt6.QtWidgets import QApplication, QMainWindow, QTextEdit
+from PyQt6.QtNetwork import QUdpSocket
+
 class QTextEditHandler(logging.Handler):
     def __init__(self, serial_console):
         super().__init__()
@@ -197,7 +201,16 @@ class MainWindow(QMainWindow):
         self.server_console.append(f'Client disconnected: {tcp_client_socket.peerAddress().toString()}:{tcp_client_socket.peerPort()}')
         tcp_client_socket.deleteLater()
 
-
+    def start_udp_server(self):
+        self.udp_socket = QUdpSocket(self)
+        self.udp_socket.bind(int(self.server_port_input.text()))  # Bind to port
+        self.udp_socket.readyRead.connect(self.udp_receive_data)
+    
+    def udp_receive_data(self):
+        while self.socket.hasPendingDatagrams():
+            udp_datagram, udp_host, udp_port = self.socket.readDatagram(self.socket.pendingDatagramSize())
+            message = bytes(udp_datagram).decode('utf-8')
+            self.server_console.append(f'Received message: {message} from {udp_host.toString()}:{udp_port}')
 
     def handle_connection(self):
         while self.tcp_server.hasPendingConnections():
@@ -218,6 +231,11 @@ class MainWindow(QMainWindow):
             elif self.server_type_combo.currentText() == "TCP" and http_server_host == "Local Host":
                 print("TCP")
                 self.start_tcp_server()
+                self.isSERVERstarted = True
+                self.create_server_button.setText("Disconnect")
+            elif self.server_type_combo.currentText() == "UDP" and http_server_host == "Local Host":
+                print("UDP")
+                self.start_udp_server()
                 self.isSERVERstarted = True
                 self.create_server_button.setText("Disconnect")
 
