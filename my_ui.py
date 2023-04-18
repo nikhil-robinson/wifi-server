@@ -105,7 +105,7 @@ class MainWindow(QMainWindow):
         self.serial_button.clicked.connect(self.on_serialButton_clicked)
         
         # Set the window properties
-        self.setWindowTitle("PyQt6 App")
+        self.setWindowTitle("MBOX V1.0 Beta")
         self.setGeometry(100, 100, 1000, 600)
         self.show()
 
