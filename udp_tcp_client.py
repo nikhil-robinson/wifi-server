@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QComboBox, QLineEdit, QPushButton, QTextEdit, QFormLayout,QHBoxLayout
-from PyQt6.QtCore import Qt, QIODevice, QByteArray
+from PyQt6.QtCore import Qt, QRegularExpression, QRegularExpressionMatch, QByteArray
 from PyQt6.QtNetwork import QUdpSocket, QTcpSocket, QAbstractSocket,QHostAddress
+from PyQt6.QtGui import QRegularExpressionValidator
 
 class NetworkClientApp(QWidget):
     def __init__(self):
@@ -18,10 +19,20 @@ class NetworkClientApp(QWidget):
         self.client_port_edit = QLineEdit()
         self.client_port_edit.setPlaceholderText("PORT")
 
+        client_ip_regex = QRegularExpression("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
+        client_port_regex = QRegularExpression("^[0-9]{1,5}$")
+
+        client_ip_validator = QRegularExpressionValidator(client_ip_regex, self.client_ip_edit)
+        self.client_ip_edit.setValidator(client_ip_validator)
+
+        client_port_validator = QRegularExpressionValidator(client_port_regex, self.client_port_edit)
+        self.client_port_edit.setValidator(client_port_validator)
+
         self.client_connect_button = QPushButton('Connect')
         self.client_connect_button.clicked.connect(self.client_connect_to_server)
 
         self.client_send_edit = QLineEdit()
+        self.client_send_edit.setDisabled(True)
 
         self.client_send_button = QPushButton('Send')
         self.client_send_button.clicked.connect(self.client_send_data)
@@ -54,38 +65,64 @@ class NetworkClientApp(QWidget):
 
     def client_connect_to_server(self):
         client_protocol = self.client_protocol_combobox.currentText()
-        self.client_url = self.client_ip_edit.text()
-        self.client_port = int(self.client_port_edit.text())
-        print(f'connectint to {self.client_url} : {self.client_port}')
+        if self.client_ip_edit.text() != "" and self.client_port_edit.text() != "":
+            self.client_url = self.client_ip_edit.text()
+            self.client_port = int(self.client_port_edit.text())
 
-        if self.client_socket:
+        else:
+            self.log_message('Error: Check your IP and PORT number.')
+            self.client_send_edit.setDisabled(True)
+            self.client_send_button.setDisabled(True)
+            return
+
+        if self.client_socket is not None: 
             if self.client_socket.isOpen():
                 self.client_socket.close()
             self.client_socket = None
             self.client_connect_button.setText("Connect")
+            self.client_protocol_combobox.setDisabled(False)
+            self.client_send_edit.setDisabled(True)
+            self.client_send_button.setDisabled(True)
 
         elif client_protocol == 'UDP':
             self.client_socket = QUdpSocket(self)
             self.client_socket.readyRead.connect(self.client_receive_data)
             self.client_socket.errorOccurred.connect(self.client_socket_display_error)
-            self.client_send_button.setDisabled(False)
-            self.client_protocol_combobox.setDisabled(True)
-            self.client_connect_button.setText("Disconnect")
+            if self.client_socket is not None:
+                self.client_send_edit.setDisabled(False)
+                self.client_send_button.setDisabled(False)
+                self.client_protocol_combobox.setDisabled(True)
+                self.client_connect_button.setText("Disconnect")
+            else:
+                self.log_message('Error: Creating the socket.')
+                self.client_send_edit.setDisabled(True)
+                self.client_send_button.setDisabled(True)
+                self.client_socket =None
+                return
 
         elif client_protocol == 'TCP':
             self.client_socket = QTcpSocket()
             self.client_socket.readyRead.connect(self.client_receive_data)
             self.client_socket.errorOccurred.connect(self.client_socket_display_error)
             self.client_socket.connectToHost(self.client_url, self.client_port)
-            self.client_send_button.setDisabled(False)
-            self.client_protocol_combobox.setDisabled(True)
-            self.client_connect_button.setText("Disconnect")
+            if self.client_socket is not None and self.client_socket.isOpen():
+                self.client_send_edit.setDisabled(False)
+                self.client_send_button.setDisabled(False)
+                self.client_protocol_combobox.setDisabled(True)
+                self.client_connect_button.setText("Disconnect")
+            else:
+                self.log_message('Error: Creating the socket.')
+                self.client_send_edit.setDisabled(True)
+                self.client_send_button.setDisabled(True)
+                self.client_socket =None
+                return
 
     def client_send_data(self):
         if self.client_protocol_combobox.currentText() == 'UDP':
             print("UDP")
             client_message = self.client_send_edit.text().encode()
             self.client_socket.writeDatagram(client_message, QHostAddress(self.client_url), self.client_port)
+
         elif self.client_protocol_combobox.currentText() == 'TCP':
             if self.client_socket is None or not self.client_socket.isOpen():
                 self.log_message('Error: Socket is not connected.')
@@ -98,12 +135,13 @@ class NetworkClientApp(QWidget):
     def client_receive_data(self):
         if self.client_protocol_combobox.currentText() == 'UDP':
             while self.client_socket.hasPendingDatagrams():
-                udp_datagram, udo_host, udo_port = self.client_socket.readDatagram(self.client_socket.pendingDatagramSize())
-                udp_message = QByteArray(udp_datagram).data().decode()
-                self.log_message(f'Received UDP data: {udp_message}')
+                client_udp_datagram, client_udp_host, client_udp_port = self.client_socket.readDatagram(self.client_socket.pendingDatagramSize())
+                client_udp_message = QByteArray(client_udp_datagram).data().decode()
+                self.log_message(f'Received UDP data: {client_udp_message}')
+
         elif self.client_protocol_combobox.currentText() == 'TCP':
-            tcp_data = self.client_socket.readAll().data().decode()
-            self.log_message(f'Received TCP data: {tcp_data}')
+            client_tcp_data = self.client_socket.readAll().data().decode()
+            self.log_message(f'Received TCP data: {client_tcp_data}')
 
 
     def log_message(self, client_message):
@@ -112,21 +150,31 @@ class NetworkClientApp(QWidget):
 
     def on_client_combo_box_activated(self, index):
         combo_box = self.sender()  # Get the sender of the signal
-        selected_option = combo_box.itemText(index)  # Get the text of the selected item
-        print(f"Activated: {selected_option}")    
+        client_selected_option = combo_box.itemText(index)  # Get the text of the selected item
+        print(f"Activated: {client_selected_option}")
+        self.client_send_edit.setDisabled(True)
+        self.client_send_button.setDisabled(True)
     
     def client_socket_display_error(self, client_socket_error):
         if client_socket_error == QAbstractSocket.SocketError.ConnectionRefusedError:
             self.client_console.append("Error: Connection refused. Make sure the server is running.")
+            self.client_send_edit.setDisabled(True)
+            self.client_send_button.setDisabled(True)
             
         elif client_socket_error == QAbstractSocket.SocketError.HostNotFoundError:
             self.client_console.append("Error: Host not found. Please check the server IP address.")
+            self.client_send_edit.setDisabled(True)
+            self.client_send_button.setDisabled(True)
             
         elif client_socket_error == QAbstractSocket.SocketError.SocketTimeoutError:
             self.client_console.append("Error: Connection timed out.")
+            self.client_send_edit.setDisabled(True)
+            self.client_send_button.setDisabled(True)
             
         else:
             self.client_console.append(f"Error: {self.client_socket.errorString()}")
+            self.client_send_edit.setDisabled(True)
+            self.client_send_button.setDisabled(True)
             
 
 
