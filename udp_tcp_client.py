@@ -1,140 +1,133 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QComboBox, QLineEdit, QPushButton, QTextEdit, QFormLayout,QHBoxLayout
 from PyQt6.QtCore import Qt, QIODevice, QByteArray
-from PyQt6.QtNetwork import QUdpSocket, QTcpSocket, QAbstractSocket
-import socket
+from PyQt6.QtNetwork import QUdpSocket, QTcpSocket, QAbstractSocket,QHostAddress
 
 class NetworkClientApp(QWidget):
     def __init__(self):
         super().__init__()
 
         # Set up UI components
-        self.protocol_combobox = QComboBox()
-        self.protocol_combobox.addItem('UDP')
-        self.protocol_combobox.addItem('TCP')
-        self.protocol_combobox.activated.connect(self.on_combo_box_activated)
+        self.client_protocol_combobox = QComboBox()
+        self.client_protocol_combobox.addItem('UDP')
+        self.client_protocol_combobox.addItem('TCP')
+        self.client_protocol_combobox.activated.connect(self.on_client_combo_box_activated)
 
 
-        self.ip_edit = QLineEdit()
-        self.ip_edit.setPlaceholderText("IP Address")
-        self.port_edit = QLineEdit()
-        self.port_edit.setPlaceholderText("PORT")
+        self.client_ip_edit = QLineEdit()
+        self.client_ip_edit.setPlaceholderText("IP Address")
+        self.client_port_edit = QLineEdit()
+        self.client_port_edit.setPlaceholderText("PORT")
 
-        self.connect_button = QPushButton('Connect')
-        self.connect_button.clicked.connect(self.connect_to_server)
-        self.connect_button.setDisabled(True)
+        self.client_connect_button = QPushButton('Connect')
+        self.client_connect_button.clicked.connect(self.client_connect_to_server)
 
-        self.send_edit = QLineEdit()
+        self.client_send_edit = QLineEdit()
 
-        self.send_button = QPushButton('Send')
-        self.send_button.clicked.connect(self.send_data)
+        self.client_send_button = QPushButton('Send')
+        self.client_send_button.clicked.connect(self.client_send_data)
+        self.client_send_button.setDisabled(True)
 
-        self.console = QTextEdit()
-        self.console.setReadOnly(True)
+        self.client_console = QTextEdit()
+        self.client_console.setReadOnly(True)
 
-        self.link_layout = QHBoxLayout()
-        self.link_layout.addWidget(self.protocol_combobox)
-        # self.link_layout.addWidget(QLabel("IP :"))
-        self.link_layout.addWidget(self.ip_edit)
-        self.link_layout.addWidget(QLabel(":"))
-        self.link_layout.addWidget(self.port_edit)
-        self.link_layout.addWidget(self.connect_button)
+        self.client_link_layout = QHBoxLayout()
+        self.client_link_layout.addWidget(self.client_protocol_combobox)
+        # self.client_link_layout.addWidget(QLabel("IP :"))
+        self.client_link_layout.addWidget(self.client_ip_edit)
+        self.client_link_layout.addWidget(QLabel(":"))
+        self.client_link_layout.addWidget(self.client_port_edit)
+        self.client_link_layout.addWidget(self.client_connect_button)
 
-        # Set up layout
-        self.layout = QFormLayout()
+        # Set up client_layout
+        self.client_layout = QFormLayout()
 
-        # self.layout.addRow('Protocol:', self.protocol_combobox)
-        self.layout.addRow(self.link_layout)
-        # self.layout.addRow(self.connect_button)
-        self.layout.addRow('Send Data:', self.send_edit)
-        self.layout.addRow(self.send_button)
-        self.layout.addRow(self.console)
+        # self.client_layout.addRow('Protocol:', self.client_protocol_combobox)
+        self.client_layout.addRow(self.client_link_layout)
+        # self.client_layout.addRow(self.client_connect_button)
+        self.client_layout.addRow('Send Data:', self.client_send_edit)
+        self.client_layout.addRow(self.client_send_button)
+        self.client_layout.addRow(self.client_console)
 
-        self.setLayout(self.layout)
+        self.setLayout(self.client_layout)
+        self.client_socket = None
 
-        self.socket = None
 
-    def connect_to_server(self):
-        protocol = self.protocol_combobox.currentText()
-        url = self.ip_edit.text()
-        port = int(self.port_edit.text())
-        print(f'connectint to {url} : {port}')
+    def client_connect_to_server(self):
+        client_protocol = self.client_protocol_combobox.currentText()
+        self.client_url = self.client_ip_edit.text()
+        self.client_port = int(self.client_port_edit.text())
+        print(f'connectint to {self.client_url} : {self.client_port}')
 
-        if protocol == 'UDP':
-            # self.socket = QUdpSocket()
-            # self.socket.readyRead.connect(self.receive_udp_data)
-            # self.socket.errorOccurred.connect(self.handle_socket_error)
-            return
-        elif protocol == 'TCP':
-            self.tcp_socket = QTcpSocket()
-            self.tcp_socket.readyRead.connect(self.receive_tcp_data)
-            self.tcp_socket.errorOccurred.connect(self.socket_display_error)
-            self.tcp_socket.connectToHost(url, port)
+        if self.client_socket:
+            if self.client_socket.isOpen():
+                self.client_socket.close()
+            self.client_socket = None
+            self.client_connect_button.setText("Connect")
 
-    def send_data(self):
-        if self.protocol_combobox.currentText() == 'UDP':
-            if self.udp_socket is None or not self.udp_socket.isOpen():
+        elif client_protocol == 'UDP':
+            self.client_socket = QUdpSocket(self)
+            self.client_socket.readyRead.connect(self.client_receive_data)
+            self.client_socket.errorOccurred.connect(self.client_socket_display_error)
+            self.client_send_button.setDisabled(False)
+            self.client_protocol_combobox.setDisabled(True)
+            self.client_connect_button.setText("Disconnect")
+
+        elif client_protocol == 'TCP':
+            self.client_socket = QTcpSocket()
+            self.client_socket.readyRead.connect(self.client_receive_data)
+            self.client_socket.errorOccurred.connect(self.client_socket_display_error)
+            self.client_socket.connectToHost(self.client_url, self.client_port)
+            self.client_send_button.setDisabled(False)
+            self.client_protocol_combobox.setDisabled(True)
+            self.client_connect_button.setText("Disconnect")
+
+    def client_send_data(self):
+        if self.client_protocol_combobox.currentText() == 'UDP':
+            print("UDP")
+            client_message = self.client_send_edit.text().encode()
+            self.client_socket.writeDatagram(client_message, QHostAddress(self.client_url), self.client_port)
+        elif self.client_protocol_combobox.currentText() == 'TCP':
+            if self.client_socket is None or not self.client_socket.isOpen():
                 self.log_message('Error: Socket is not connected.')
                 return
-            server_address = self.ip_edit.text()
-            server_port = int(self.ip_edit.text())
-            message = self.send_edit.text()
+            client_message = self.client_send_edit.text().encode()
+            self.client_socket.write(QByteArray(client_message))
+            self.client_socket.flush()
 
-            # Create a UDP socket
-            client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-            # Send message to the server
-            client_socket.sendto(message.encode(), (server_address, server_port))
+    def client_receive_data(self):
+        if self.client_protocol_combobox.currentText() == 'UDP':
+            while self.client_socket.hasPendingDatagrams():
+                udp_datagram, udo_host, udo_port = self.client_socket.readDatagram(self.client_socket.pendingDatagramSize())
+                udp_message = QByteArray(udp_datagram).data().decode()
+                self.log_message(f'Received UDP data: {udp_message}')
+        elif self.client_protocol_combobox.currentText() == 'TCP':
+            tcp_data = self.client_socket.readAll().data().decode()
+            self.log_message(f'Received TCP data: {tcp_data}')
 
-            # Receive response from the server
-            response, server_address = client_socket.recvfrom(1024)
 
-            # Process the response (e.g. display it on the UI)
-            # ...
-
-            # Close the socket
-            client_socket.close()
-        elif self.protocol_combobox.currentText() == 'TCP':
-            if self.tcp_socket is None or not self.tcp_socket.isOpen():
-                self.log_message('Error: Socket is not connected.')
-                return
-            message = self.send_edit.text().encode()
-            self.tcp_socket.write(QByteArray(message))
-            self.tcp_socket.flush()
-
-    def receive_udp_data(self):
-        while self.socket.hasPendingDatagrams():
-            data, host, port = self.socket.readDatagram(self.socket.pendingDatagramSize())
-            self.log_message(f'Received UDP data from {host.toString()}:{port}: {data.decode()}')
-
-    def receive_tcp_data(self):
-        data = self.tcp_socket.readAll().data().decode()
-        self.log_message(f'Received TCP data: {data}')
-
-    def handle_socket_error(self, socket_error):
-        self.log_message(f'Socket error occurred: {self.socket.errorString()}')
-
-    def log_message(self, message):
-        self.console.append(message)
+    def log_message(self, client_message):
+        self.client_console.append(client_message)
     
 
-    def on_combo_box_activated(self, index):
+    def on_client_combo_box_activated(self, index):
         combo_box = self.sender()  # Get the sender of the signal
         selected_option = combo_box.itemText(index)  # Get the text of the selected item
-        print(f"Activated: {selected_option}")
-        if selected_option == "UDP":
-            self.connect_button.setDisabled(True)
-        elif selected_option == "TCP":
-            self.connect_button.setDisabled(False)
+        print(f"Activated: {selected_option}")    
     
-    def socket_display_error(self, socket_error):
-        if socket_error == QAbstractSocket.SocketError.ConnectionRefusedError:
-            self.console.append("Error: Connection refused. Make sure the server is running.")
-        elif socket_error == QAbstractSocket.SocketError.HostNotFoundError:
-            self.console.append("Error: Host not found. Please check the server IP address.")
-        elif socket_error == QAbstractSocket.SocketError.SocketTimeoutError:
-            self.console.append("Error: Connection timed out.")
+    def client_socket_display_error(self, client_socket_error):
+        if client_socket_error == QAbstractSocket.SocketError.ConnectionRefusedError:
+            self.client_console.append("Error: Connection refused. Make sure the server is running.")
+            
+        elif client_socket_error == QAbstractSocket.SocketError.HostNotFoundError:
+            self.client_console.append("Error: Host not found. Please check the server IP address.")
+            
+        elif client_socket_error == QAbstractSocket.SocketError.SocketTimeoutError:
+            self.client_console.append("Error: Connection timed out.")
+            
         else:
-            self.console.append(f"Error: {self.tcp_socket.errorString()}")
+            self.client_console.append(f"Error: {self.client_socket.errorString()}")
+            
 
 
 

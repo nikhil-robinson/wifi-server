@@ -1,63 +1,67 @@
 import sys
-import socket
-from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget
+from PyQt6.QtCore import QByteArray
+from PyQt6.QtGui import QTextCursor, QTextDocument
+from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QTextEdit, QLineEdit, QPushButton
 
-class UdpClientApp(QMainWindow):
+from PyQt6.QtNetwork import QUdpSocket, QHostAddress
+
+class UDPClient(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        # Set up the UI
+        # Set up window properties
         self.setWindowTitle("UDP Client")
-        self.setGeometry(100, 100, 300, 200)
+        self.setFixedSize(500, 400)
 
-        # Widgets
-        self.label_server_address = QLabel("Server Address:")
-        self.edit_server_address = QLineEdit()
-        self.label_server_port = QLabel("Server Port:")
-        self.edit_server_port = QLineEdit()
-        self.label_message = QLabel("Message:")
-        self.edit_message = QLineEdit()
-        self.btn_send = QPushButton("Send")
-        self.btn_send.clicked.connect(self.send_message)
+        # Create widgets
+        self.message_history = QTextEdit()
+        self.message_history.setReadOnly(True)
+        self.message_entry = QLineEdit()
+        self.send_button = QPushButton("Send")
 
-        # Layout
+        # Set up layout
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+
         layout = QVBoxLayout()
-        layout.addWidget(self.label_server_address)
-        layout.addWidget(self.edit_server_address)
-        layout.addWidget(self.label_server_port)
-        layout.addWidget(self.edit_server_port)
-        layout.addWidget(self.label_message)
-        layout.addWidget(self.edit_message)
-        layout.addWidget(self.btn_send)
+        central_widget.setLayout(layout)
 
-        container = QWidget()
-        container.setLayout(layout)
-        self.setCentralWidget(container)
+        message_label = QLabel("Message history:")
+        layout.addWidget(message_label)
+        layout.addWidget(self.message_history)
+
+        entry_layout = QHBoxLayout()
+        entry_label = QLabel("Enter message:")
+        entry_layout.addWidget(entry_label)
+        entry_layout.addWidget(self.message_entry)
+        entry_layout.addWidget(self.send_button)
+        layout.addLayout(entry_layout)
+
+        # Set up UDP socket
+        self.udp_socket = QUdpSocket(self)
+        self.udp_socket.readyRead.connect(self.receive_message)
+        self.send_button.clicked.connect(self.send_message)
 
     def send_message(self):
-        # Get server address, port, and message from input fields
-        server_address = self.edit_server_address.text()
-        server_port = int(self.edit_server_port.text())
-        message = self.edit_message.text()
+        message = self.message_entry.text().encode()
+        self.udp_socket.writeDatagram(message, QHostAddress("127.0.0.1"), 12345)
 
-        # Create a UDP socket
-        client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        # Clear the message entry and move cursor to end of message history
+        self.message_entry.clear()
+        self.message_entry.setFocus()
+        self.message_history.moveCursor(QTextCursor.MoveOperation.End)
 
-        # Send message to the server
-        client_socket.sendto(message.encode(), (server_address, server_port))
+        # Append message to message history
+        self.message_history.append(f">>> {message.decode()}")
 
-        # Receive response from the server
-        response, server_address = client_socket.recvfrom(1024)
+    def receive_message(self):
+        while self.udp_socket.hasPendingDatagrams():
+            datagram, host, port = self.udp_socket.readDatagram(self.udp_socket.pendingDatagramSize())
+            message = QByteArray(datagram).data().decode()
+            self.message_history.append(f"<<< {message}")
 
-        # Process the response (e.g. display it on the UI)
-        # ...
-
-        # Close the socket
-        client_socket.close()
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = UdpClientApp()
+    window = UDPClient()
     window.show()
     sys.exit(app.exec())
