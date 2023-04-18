@@ -122,26 +122,28 @@ class MainWindow(QMainWindow):
         # self.server_type_combo.currentIndexChanged.connect(self.handle_server_type_change)
 
         self.server_port_input = QLineEdit()
-        self.server_port_input.setText("8080")
+        self.server_port_input.setPlaceholderText("Enter Port Number")
 
-        self.server_local_host_radio = QRadioButton("Local Host")
-        self.server_ngrok_radio = QRadioButton("Ngrok")
+        server_port_regex = QRegularExpression("^[0-9]{1,5}$")
+
+        server_port_validator = QRegularExpressionValidator(server_port_regex, self.server_port_input)
+        self.server_port_input.setValidator(server_port_validator)
 
 
         self.create_server_button = QPushButton("Start Server")
         self.create_server_button.clicked.connect(self.create_server)
 
         # Add the input fields to the form layout
-        self.server_form_layout.addRow(QLabel("Server Type:"), self.server_type_combo)
-        self.server_form_layout.addRow(QLabel("Port:"), self.server_port_input)
+        self.server_form_layout.addRow(self.server_type_combo)
+        self.server_form_layout.addRow(self.server_port_input)
 
 
-        self.server_form_layout.addRow(QLabel(""), self.create_server_button)
+        self.server_form_layout.addRow(self.create_server_button)
 
         # Create the log window
         self.server_console = QTextEdit()
         self.server_console.setReadOnly(True)
-        self.server_form_layout.addRow(QLabel(""), self.server_console)
+        self.server_form_layout.addRow(self.server_console)
 
 
 
