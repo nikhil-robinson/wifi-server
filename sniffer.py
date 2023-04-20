@@ -1,11 +1,10 @@
-import sys
-import scapy.all as scapy
+import pyshark
+capture = pyshark.LiveCapture(interface='eth0')
+capture.sniff(timeout=50)
+capture
 
-iface = sys.argv[1]
-sniff_filter = sys.argv[2]
+capture[3]
 
-def process_packet(packet):
-    # Process the packet here
-    print(packet.summary())
 
-scapy.sniff(iface=iface, filter=sniff_filter, prn=process_packet)
+for packet in capture.sniff_continuously(packet_count=5):
+    print('Just arrived:', packet)
