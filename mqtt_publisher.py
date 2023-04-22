@@ -37,12 +37,16 @@ class MainWindow(QMainWindow):
     def publish(self):
         # Get the input values
         broker_url = self.url_edit.text()
+        if ':' in broker_url:
+            ip, port = broker_url.split(':')
+            print(port,ip)
+
         topic = self.topic_edit.text()
         data = self.data_edit.text()
 
         # Create an MQTT client and connect to the broker
         client = mqtt.Client()
-        client.connect(broker_url)
+        client.connect(ip,int(port))
 
         # Publish the message to the topic
         client.publish(topic, data)
