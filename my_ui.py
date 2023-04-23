@@ -180,8 +180,8 @@ class MainWindow(QMainWindow):
         server_log_handler = QTextEditHandler(self.server_console)
         logging.getLogger().addHandler(server_log_handler)
         logging.getLogger().setLevel(logging.DEBUG)
-        self.http_process = None
-        self.udp_socket =None
+        self.server_http_process = None
+        self.server_udp_socket =None
         self.tcp_socket = None
         self.isSERVERstarted = False
 
@@ -218,23 +218,23 @@ class MainWindow(QMainWindow):
             os.chdir(self.server_send_data.text())
             logging.debug(f"Linking dir {self.server_send_data.text()}")
 
-        self.http_process = QProcess(self)
-        self.http_process.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels)
-        self.http_process.readyReadStandardOutput.connect(self.http_handle_output)
-        self.http_process.finished.connect(self.http_process_finished)
-        self.http_process.start("python3", [ "-m", "http.server", self.server_port_input.text(), "--bind", self.server_ip_input.text()])
+        self.server_http_process = QProcess(self)
+        self.server_http_process.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels)
+        self.server_http_process.readyReadStandardOutput.connect(self.http_handle_output)
+        self.server_http_process.finished.connect(self.http_process_finished)
+        self.server_http_process.start("python3", [ "-m", "http.server", self.server_port_input.text(), "--bind", self.server_ip_input.text()])
         self.create_server_button.setText("Stop Server")
         self.isSERVERstarted = True
         
     def http_handle_output(self):
         # Log http_output from HTTP server to serial_console
-        http_output = bytes(self.http_process.readAllStandardOutput()).decode()
+        http_output = bytes(self.server_http_process.readAllStandardOutput()).decode()
         logging.debug(http_output)
 
     def http_process_finished(self):
-        # Destroy http_process and print message when finished
-        self.http_process.terminate()
-        self.http_process.waitForFinished()
+        # Destroy server_http_process and print message when finished
+        self.server_http_process.terminate()
+        self.server_http_process.waitForFinished()
         # logging.debug("HTTP server stopped")
         self.isSERVERstarted = False
         os.chdir(self.cwd)
@@ -257,13 +257,13 @@ class MainWindow(QMainWindow):
         tcp_client_socket.deleteLater()
 
     def start_udp_server(self):
-        self.udp_socket = QUdpSocket(self)
-        self.udp_socket.bind(int(self.server_port_input.text()))  # Bind to port
-        self.udp_socket.readyRead.connect(self.udp_receive_data)
+        self.server_udp_socket = QUdpSocket(self)
+        self.server_udp_socket.bind(int(self.server_port_input.text()))  # Bind to port
+        self.server_udp_socket.readyRead.connect(self.udp_receive_data)
     
     def udp_receive_data(self):
-        while self.udp_socket.hasPendingDatagrams():
-            udp_datagram, udp_host, udp_port = self.udp_socket.readDatagram(self.udp_socket.pendingDatagramSize())
+        while self.server_udp_socket.hasPendingDatagrams():
+            udp_datagram, udp_host, udp_port = self.server_udp_socket.readDatagram(self.server_udp_socket.pendingDatagramSize())
             udp_message = bytes(udp_datagram).decode('utf-8')
             self.server_console.append(f'Received message: {udp_message} from {udp_host.toString()}:{udp_port}')
 
@@ -303,11 +303,11 @@ class MainWindow(QMainWindow):
                  self.server_console.append("Please select a server type")
 
         else:
-            if self.http_process:
-                self.http_process.terminate()
-                self.http_process.waitForFinished()
-            elif self.udp_socket:
-                self.udp_socket.deleteLater()
+            if self.server_http_process:
+                self.server_http_process.terminate()
+                self.server_http_process.waitForFinished()
+            elif self.server_udp_socket:
+                self.server_udp_socket.deleteLater()
             elif self.tcp_server:
                 self.tcp_server.deleteLater()
             self.create_server_button.setText("Sart Server")
@@ -652,10 +652,10 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         # Terminate the process if the window is closed
-        if self.http_process:
-            if self.http_process.state() != QProcess.ProcessState.NotRunning:
-                self.http_process.terminate()
-                self.http_process.waitForFinished()
+        if self.server_http_process:
+            if self.server_http_process.state() != QProcess.ProcessState.NotRunning:
+                self.server_http_process.terminate()
+                self.server_http_process.waitForFinished()
         super().closeEvent(event)
 
 
