@@ -213,6 +213,7 @@ class MainWindow(QMainWindow):
 
     def start_http_server(self):
         # Start HTTP server on serial_port 80
+        self.cwd = None
         if os.path.exists(self.server_send_data.text()) and self.server_send_data.text() !="":
             self.cwd =os.getcwd()
             os.chdir(self.server_send_data.text())
