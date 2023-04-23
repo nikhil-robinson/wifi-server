@@ -1,0 +1,14 @@
+        if os.path.exists(self.server_send_data.text()) and self.server_send_data.text() !="":
+            self.http_Handler = http.server.SimpleHTTPRequestHandler
+            os.chdir(self.server_send_data.text())  # change current directory to the requested directory
+            with socketserver.TCPServer((self.server_ip_input.text(), int(self.server_port_input.text())), self.http_Handler) as self.httpd_server:  # create server
+                print(f"Serving at {self.server_ip_input.text()}:{self.server_port_input.text()}")
+                self.httpd_server.serve_forever()
+            return self.httpd_server
+            # httpd.serve_forever()
+        elif self.server_send_data.text() =="":
+            self.http_Handler = http.server.SimpleHTTPRequestHandler
+            with socketserver.TCPServer((self.server_ip_input.text(), int(self.server_port_input.text())), self.http_Handler) as self.httpd_server:  # create server
+                print(f"Serving at {self.server_ip_input.text()}:{self.server_port_input.text()}")
+                self.httpd_server.serve_forever()
+            return self.httpd_server

@@ -24,6 +24,10 @@ from PyQt6.QtCore import Qt, QRegularExpression, QRegularExpressionMatch, QByteA
 from PyQt6.QtNetwork import QUdpSocket, QTcpSocket, QAbstractSocket,QHostAddress
 from PyQt6.QtGui import QRegularExpressionValidator
 
+import http.server
+import socketserver
+import os
+
 class QTextEditHandler(logging.Handler):
     def __init__(self, serial_console):
         super().__init__()
@@ -117,17 +121,40 @@ class MainWindow(QMainWindow):
 
         # Create the input fields for the form
         self.server_type_combo = QComboBox()
-        self.server_type_combo.addItems(["HTTP", "UDP", "TCP"])
+        self.server_type_combo.addItems(["--Select Server--","HTTP", "UDP", "TCP","MQTT"])
         self.server_type_combo.setCurrentIndex(0)
+        self.server_type_combo.currentIndexChanged.connect(self.server_combo_box_changed)
         # self.server_type_combo.currentIndexChanged.connect(self.handle_server_type_change)
 
         self.server_port_input = QLineEdit()
         self.server_port_input.setPlaceholderText("Enter Port Number")
 
+        self.server_ip_label =QLabel("IP :")
+        self.server_port_label =QLabel("Port :")
+
+        self.server_ip_input = QLineEdit()
+        self.server_ip_input.setPlaceholderText("Enter ip address")
+        self.server_ip_input.setText("127.0.0.1")
+
+        self.server_address_bar = QHBoxLayout()
+        self.server_address_bar.addWidget(self.server_ip_label)
+        self.server_address_bar.addWidget(self.server_ip_input)
+        self.server_address_bar.addWidget(self.server_port_label)
+        self.server_address_bar.addWidget(self.server_port_input)
+
+
+        self.server_send_data = QLineEdit()
+        self.server_send_data.setPlaceholderText("Enter server response")
+
+
         server_port_regex = QRegularExpression("^[0-9]{1,5}$")
+        server_ip_regex = QRegularExpression("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
 
         server_port_validator = QRegularExpressionValidator(server_port_regex, self.server_port_input)
         self.server_port_input.setValidator(server_port_validator)
+
+        server_ip_validator = QRegularExpressionValidator(server_ip_regex, self.server_ip_input)
+        self.server_ip_input.setValidator(server_ip_validator)
 
 
         self.create_server_button = QPushButton("Start Server")
@@ -135,11 +162,14 @@ class MainWindow(QMainWindow):
 
         # Add the input fields to the form layout
         self.server_form_layout.addRow(self.server_type_combo)
-        self.server_form_layout.addRow(self.server_port_input)
-
-
+        self.server_form_layout.addRow(self.server_address_bar)
+        self.server_form_layout.addRow(self.server_send_data)
         self.server_form_layout.addRow(self.create_server_button)
 
+        self.server_ip_input.setEnabled(False)
+        self.server_port_input.setEnabled(False)
+        self.server_send_data.setEnabled(False)
+        self.create_server_button.setEnabled(False)
         # Create the log window
         self.server_console = QTextEdit()
         self.server_console.setReadOnly(True)
@@ -155,18 +185,44 @@ class MainWindow(QMainWindow):
         self.tcp_socket = None
         self.isSERVERstarted = False
 
-    # def handle_server_type_change(self, index):
-    #     # Retrieve the current selected server type
-    #     self.server_type = self.server_type_combo.currentText()
+    def server_combo_box_changed(self):
+        selected_option = self.server_type_combo.currentText()
+        if selected_option == "MQTT":
+            self.server_ip_input.setEnabled(True)
+            self.server_port_input.setEnabled(True)
+            self.server_send_data.setEnabled(True)
+            self.create_server_button.setEnabled(True)
+            self.server_send_data.setPlaceholderText("Enter topic and data seprated by ':' eg: topic:data")
+        elif selected_option == "HTTP":
+            self.server_ip_input.setEnabled(True)
+            self.server_port_input.setEnabled(True)
+            self.server_send_data.setEnabled(True)
+            self.create_server_button.setEnabled(True)
+            self.server_send_data.setPlaceholderText("Enter path for files (.html,.js)")
+        elif selected_option == "UDP" or selected_option == "TCP":
+            self.server_ip_input.setEnabled(True)
+            self.server_port_input.setEnabled(True)
+            self.server_send_data.setEnabled(True)
+            self.create_server_button.setEnabled(True)
+            self.server_send_data.setPlaceholderText("Enter server response")
+        else:
+            self.server_ip_input.setEnabled(False)
+            self.server_port_input.setEnabled(False)
+            self.server_send_data.setEnabled(False)
+            self.create_server_button.setEnabled(False)
 
-    def start_http_server(self,serial_port):
+    def start_http_server(self):
         # Start HTTP server on serial_port 80
-        
+        if os.path.exists(self.server_send_data.text()) and self.server_send_data.text() !="":
+            self.cwd =os.getcwd()
+            os.chdir(self.server_send_data.text())
+            logging.debug(f"Linking dir {self.server_send_data.text()}")
+
         self.http_process = QProcess(self)
         self.http_process.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels)
         self.http_process.readyReadStandardOutput.connect(self.http_handle_output)
         self.http_process.finished.connect(self.http_process_finished)
-        self.http_process.start("python3", ["-m", "http.server", serial_port])
+        self.http_process.start("python3", [ "-m", "http.server", self.server_port_input.text(), "--bind", self.server_ip_input.text()])
         self.create_server_button.setText("Stop Server")
         self.isSERVERstarted = True
         
@@ -179,8 +235,9 @@ class MainWindow(QMainWindow):
         # Destroy http_process and print message when finished
         self.http_process.terminate()
         self.http_process.waitForFinished()
-        logging.debug("HTTP server stopped")
+        # logging.debug("HTTP server stopped")
         self.isSERVERstarted = False
+        os.chdir(self.cwd)
 
     def start_tcp_server(self):
         self.tcp_server = QTcpServer(self)
@@ -217,27 +274,33 @@ class MainWindow(QMainWindow):
             tcp_client_socket.disconnected.connect(self.tcp_client_disconnected)
 
     def create_server(self):
-        # TODO: Implement server creation logic
         if self.isSERVERstarted == False:
-            self.server_console.append(f"{self.server_type_combo.currentText()} Server created with port {self.server_port_input.text()}!")
+            if self.server_type_combo.currentText() == "--Select Server--" or self.server_ip_input.text() =="" or self.server_port_input.text() =="":
+                self.server_console.append("Please check your configuration")
+                return
             if self.server_type_combo.currentText() == "HTTP":
                 print("Http")
-                self.start_http_server(self.server_port_input.text())
+                self.start_http_server()
                 self.isSERVERstarted = True
                 self.create_server_button.setText("Stop Server")
                 self.server_type_combo.setDisabled(True)
+                self.server_console.append(f"{self.server_type_combo.currentText()} Server created on {self.server_ip_input.text()}:{self.server_port_input.text()}")
             elif self.server_type_combo.currentText() == "TCP":
                 print("TCP")
                 self.start_tcp_server()
                 self.isSERVERstarted = True
                 self.create_server_button.setText("Stop Server")
                 self.server_type_combo.setDisabled(True)
+                self.server_console.append(f"{self.server_type_combo.currentText()} Server created on {self.server_ip_input.text()}:{self.server_port_input.text()}")
             elif self.server_type_combo.currentText() == "UDP":
                 print("UDP")
                 self.start_udp_server()
                 self.isSERVERstarted = True
                 self.create_server_button.setText("Stop Server")
                 self.server_type_combo.setDisabled(True)
+                self.server_console.append(f"{self.server_type_combo.currentText()} Server created on {self.server_ip_input.text()}:{self.server_port_input.text()}")
+            else:
+                 self.server_console.append("Please select a server type")
 
         else:
             if self.http_process:

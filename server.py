@@ -107,7 +107,7 @@ class MainWindow(QMainWindow):
             self.server_send_data.setPlaceholderText("Enter topic and data seprated by : [topic:data]")
         elif selected_option == "HTTP":
             self.server_send_data.setPlaceholderText("Enter path for files (.html,.js)")
-        elif selected_option == "UDP":
+        elif selected_option == "UDP" or selected_option == "TCP":
             self.server_send_data.setPlaceholderText("Enter server response")
 
     def start_http_server(self):
