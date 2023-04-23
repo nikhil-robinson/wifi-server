@@ -182,7 +182,6 @@ class MainWindow(QMainWindow):
         logging.getLogger().setLevel(logging.DEBUG)
         self.server_http_process = None
         self.server_udp_socket =None
-        self.tcp_socket = None
         self.isSERVERstarted = False
 
     def server_combo_box_changed(self):
@@ -259,14 +258,15 @@ class MainWindow(QMainWindow):
 
     def start_udp_server(self):
         self.server_udp_socket = QUdpSocket(self)
-        self.server_udp_socket.bind(int(self.server_port_input.text()))  # Bind to port
+        self.server_udp_socket.bind(QHostAddress(self.server_ip_input.text()),int(self.server_port_input.text()))  # Bind to port
         self.server_udp_socket.readyRead.connect(self.udp_receive_data)
     
     def udp_receive_data(self):
         while self.server_udp_socket.hasPendingDatagrams():
-            udp_datagram, udp_host, udp_port = self.server_udp_socket.readDatagram(self.server_udp_socket.pendingDatagramSize())
-            udp_message = bytes(udp_datagram).decode('utf-8')
-            self.server_console.append(f'Received message: {udp_message} from {udp_host.toString()}:{udp_port}')
+            server_udp_datagram, server_udp_host, server_udp_port = self.server_udp_socket.readDatagram(self.server_udp_socket.pendingDatagramSize())
+            server_udp_message = bytes(server_udp_datagram).decode('utf-8')
+            self.server_console.append(f'Received message: {server_udp_message} from {server_udp_host.toString()}:{server_udp_port}')
+        self.server_udp_socket.writeDatagram(self.server_send_data.text().encode(), QHostAddress(server_udp_host), int(server_udp_port))
 
     def handle_connection(self):
         while self.tcp_server.hasPendingConnections():
