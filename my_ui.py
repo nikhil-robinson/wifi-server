@@ -242,7 +242,7 @@ class MainWindow(QMainWindow):
     def start_tcp_server(self):
         self.tcp_server = QTcpServer(self)
         self.tcp_server.listen(QHostAddress("127.0.0.1"), int(self.server_port_input.text()))  # Listen on localhost, port 5000
-        self.tcp_server.newConnection.connect(self.handle_connection)
+        self.tcp_server.newConnection.connect(self.tcp_server_handle_connection)
 
 
 
@@ -250,6 +250,7 @@ class MainWindow(QMainWindow):
         tcp_client_socket = self.sender()
         tcp_message = tcp_client_socket.readAll().data().decode('utf-8')
         self.server_console.append(f'Received message: {tcp_message} from {tcp_client_socket.peerAddress().toString()}:{tcp_client_socket.peerPort()}')
+        tcp_client_socket.write(self.server_send_data.text().encode())
 
     def tcp_client_disconnected(self):
         tcp_client_socket = self.sender()
@@ -268,11 +269,12 @@ class MainWindow(QMainWindow):
             self.server_console.append(f'Received message: {server_udp_message} from {server_udp_host.toString()}:{server_udp_port}')
         self.server_udp_socket.writeDatagram(self.server_send_data.text().encode(), QHostAddress(server_udp_host), int(server_udp_port))
 
-    def handle_connection(self):
+    def tcp_server_handle_connection(self):
         while self.tcp_server.hasPendingConnections():
-            tcp_client_socket = self.tcp_server.nextPendingConnection()
-            tcp_client_socket.readyRead.connect(self.tcp_receive_data)
-            tcp_client_socket.disconnected.connect(self.tcp_client_disconnected)
+            tcp_server_client_socket = self.tcp_server.nextPendingConnection()
+            self.server_console.append(f'Client Connected: {tcp_server_client_socket.peerAddress().toString()}:{tcp_server_client_socket.peerPort()}')
+            tcp_server_client_socket.readyRead.connect(self.tcp_receive_data)
+            tcp_server_client_socket.disconnected.connect(self.tcp_client_disconnected)
 
     def create_server(self):
         if self.isSERVERstarted == False:
@@ -284,21 +286,32 @@ class MainWindow(QMainWindow):
                 self.start_http_server()
                 self.isSERVERstarted = True
                 self.create_server_button.setText("Stop Server")
-                self.server_type_combo.setDisabled(True)
+                if self.server_http_process:
+                    self.server_type_combo.setDisabled(True)
+                    self.server_ip_input.setDisabled(True)
+                    self.server_port_input.setDisabled(True)
+                    self.server_send_data.setDisabled(True)
                 self.server_console.append(f"{self.server_type_combo.currentText()} Server created on {self.server_ip_input.text()}:{self.server_port_input.text()}")
             elif self.server_type_combo.currentText() == "TCP":
                 print("TCP")
                 self.start_tcp_server()
                 self.isSERVERstarted = True
                 self.create_server_button.setText("Stop Server")
-                self.server_type_combo.setDisabled(True)
+                if self.tcp_server:
+                    self.server_type_combo.setDisabled(True)
+                    self.server_ip_input.setDisabled(True)
+                    self.server_port_input.setDisabled(True)
                 self.server_console.append(f"{self.server_type_combo.currentText()} Server created on {self.server_ip_input.text()}:{self.server_port_input.text()}")
+                
             elif self.server_type_combo.currentText() == "UDP":
                 print("UDP")
                 self.start_udp_server()
                 self.isSERVERstarted = True
                 self.create_server_button.setText("Stop Server")
-                self.server_type_combo.setDisabled(True)
+                if self.server_udp_socket:
+                    self.server_type_combo.setDisabled(True)
+                    self.server_ip_input.setDisabled(True)
+                    self.server_port_input.setDisabled(True)
                 self.server_console.append(f"{self.server_type_combo.currentText()} Server created on {self.server_ip_input.text()}:{self.server_port_input.text()}")
             else:
                  self.server_console.append("Please select a server type")
@@ -314,6 +327,9 @@ class MainWindow(QMainWindow):
             self.create_server_button.setText("Sart Server")
             self.isSERVERstarted = False
             self.server_type_combo.setDisabled(False)
+            self.server_ip_input.setDisabled(False)
+            self.server_port_input.setDisabled(False)
+            self.server_send_data.setDisabled(False)
             self.server_console.append(f"{self.server_type_combo.currentText()} Server Stoped!")
 
     
