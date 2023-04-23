@@ -1,1 +1,35 @@
-2023-04-24 02:44:45,891 - root - DEBUG - 127.0.0.1 - - [24/Apr/2023 02:44:45] "GET / HTTP/1.1" 200 -
+2023-04-24 02:44:45,891 - root - DEBUG - 127.0.0.1 - - [24/Apr/2023 02:44:45] "GET / HTTP/1.1" 200 -2023-04-24 03:24:23,399 - root - ERROR - type object 'QProcess' has no attribute 'Running'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 342, in create_server
+    if broker_process.state() == QProcess.Running:
+AttributeError: type object 'QProcess' has no attribute 'Running'
+2023-04-24 03:59:41,699 - root - ERROR - [Errno 13] Permission denied: '/etc/mosquitto/mosquitto.conf'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 360, in create_server
+    with open(conf_file_path, "w") as f:
+PermissionError: [Errno 13] Permission denied: '/etc/mosquitto/mosquitto.conf'
+2023-04-24 04:02:04,003 - root - ERROR - name 'ip_address' is not defined
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 354, in create_server
+    os.system(f"pkexec echo 'listener {ip_address}:{port_number}' > /etc/mosquitto/mosquitto.conf")
+NameError: name 'ip_address' is not defined
+2023-04-24 04:06:34,953 - root - ERROR - 'PyQt6.QtCore.pyqtBoundSignal' object has no attribute 'start'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 359, in create_server
+    self.broker_process.finished.start("mosquito",["-c","/etc/mosquitto/mosquitto.conf"])
+AttributeError: 'PyQt6.QtCore.pyqtBoundSignal' object has no attribute 'start'
+2023-04-24 04:14:58,473 - root - ERROR - module 'os' has no attribute 'getCwd'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 359, in create_server
+    self.broker_process.start("mosquito",["-c",f"{os.getCwd()}/mosquitto.conf"])
+AttributeError: module 'os' has no attribute 'getCwd'
+2023-04-24 04:22:28,690 - root - ERROR - 'QLineEdit' object has no attribute 'settext'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 354, in create_server
+    self.server_ip_input.settext("127.0.0.1")
+AttributeError: 'QLineEdit' object has no attribute 'settext'
+2023-04-24 04:24:29,054 - root - ERROR - 'NoneType' object has no attribute 'start'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 360, in create_server
+    self.server_http_process.start("mosquitto", [ "-p", self.server_port_input.text()])
+AttributeError: 'NoneType' object has no attribute 'start'
