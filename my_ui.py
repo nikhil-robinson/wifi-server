@@ -114,7 +114,7 @@ class MainWindow(QMainWindow):
             self.setGeometry(100, 100, 1000, 600)
             self.show()
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
     def serverConf(self):
         try:
@@ -188,7 +188,7 @@ class MainWindow(QMainWindow):
             self.server_udp_socket =None
             self.isSERVERstarted = False
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
     def server_combo_box_changed(self):
         try:
@@ -217,7 +217,7 @@ class MainWindow(QMainWindow):
                 self.server_send_data.setEnabled(False)
                 self.create_server_button.setEnabled(False)
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
     def start_http_server(self):
         try:
@@ -236,7 +236,7 @@ class MainWindow(QMainWindow):
             self.create_server_button.setText("Stop Server")
             self.isSERVERstarted = True
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
         
     def http_handle_output(self):
         try:
@@ -244,7 +244,7 @@ class MainWindow(QMainWindow):
             http_output = bytes(self.server_http_process.readAllStandardOutput()).decode()
             logging.debug(http_output)
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
     def http_process_finished(self):
         try:
@@ -253,9 +253,9 @@ class MainWindow(QMainWindow):
             self.server_http_process.waitForFinished()
             # logging.debug("HTTP server stopped")
             self.isSERVERstarted = False
-            os.chdir(self.cwd)
+            if self.cwd is not None :os.chdir(self.cwd)
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
     def start_tcp_server(self):
         try:
@@ -263,7 +263,7 @@ class MainWindow(QMainWindow):
             self.tcp_server.listen(QHostAddress("127.0.0.1"), int(self.server_port_input.text()))  # Listen on localhost, port 5000
             self.tcp_server.newConnection.connect(self.tcp_server_handle_connection)
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
 
 
@@ -274,7 +274,7 @@ class MainWindow(QMainWindow):
             self.server_console.append(f'Received message: {tcp_message} from {tcp_client_socket.peerAddress().toString()}:{tcp_client_socket.peerPort()}')
             tcp_client_socket.write(self.server_send_data.text().encode())
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
     def tcp_client_disconnected(self):
         try:
@@ -282,7 +282,7 @@ class MainWindow(QMainWindow):
             self.server_console.append(f'Client disconnected: {tcp_client_socket.peerAddress().toString()}:{tcp_client_socket.peerPort()}')
             tcp_client_socket.deleteLater()
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
     def start_udp_server(self):
         try:
@@ -290,7 +290,7 @@ class MainWindow(QMainWindow):
             self.server_udp_socket.bind(QHostAddress(self.server_ip_input.text()),int(self.server_port_input.text()))  # Bind to port
             self.server_udp_socket.readyRead.connect(self.udp_receive_data)
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
     
     def udp_receive_data(self):
         try:
@@ -300,7 +300,7 @@ class MainWindow(QMainWindow):
                 self.server_console.append(f'Received message: {server_udp_message} from {server_udp_host.toString()}:{server_udp_port}')
             self.server_udp_socket.writeDatagram(self.server_send_data.text().encode(), QHostAddress(server_udp_host), int(server_udp_port))
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
     def tcp_server_handle_connection(self):
         try:
@@ -310,7 +310,7 @@ class MainWindow(QMainWindow):
                 tcp_server_client_socket.readyRead.connect(self.tcp_receive_data)
                 tcp_server_client_socket.disconnected.connect(self.tcp_client_disconnected)
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
     def create_server(self):
         try:
@@ -370,7 +370,7 @@ class MainWindow(QMainWindow):
                 self.server_console.append(f"{self.server_type_combo.currentText()} Server Stoped!")
 
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
     
     def on_serverButton_clicked(self):
@@ -378,7 +378,7 @@ class MainWindow(QMainWindow):
         try:
             self.stacked_widget.setCurrentWidget(self.server_form_widget)
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
         
     
@@ -386,13 +386,13 @@ class MainWindow(QMainWindow):
         try:
             self.stacked_widget.setCurrentWidget(self.client_form_widget)
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
     
     def on_serialButton_clicked(self):
         try:
             self.stacked_widget.setCurrentWidget(self.serial_form_widget)
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
 
 
@@ -468,7 +468,7 @@ class MainWindow(QMainWindow):
             self.serial_p_timer.timeout.connect(self.refresh_ports)
             self.serial_p_timer.start(1000)
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
     def refresh_ports(self):
         try:
@@ -477,7 +477,7 @@ class MainWindow(QMainWindow):
             self.serial_port_combo.addItems(serial_ports)
             # time.sleep(1)
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
     def connect_or_disconnect(self):
         try:
@@ -503,7 +503,7 @@ class MainWindow(QMainWindow):
                 self.serial_connect_button.setText("Connect")
                 self.serial_connected = False
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
 
 
@@ -514,7 +514,7 @@ class MainWindow(QMainWindow):
                 self.serial.write(serial_data.encode())
                 self.serial_send_input.clear()
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
    
 
@@ -535,14 +535,14 @@ class MainWindow(QMainWindow):
             self.serial_p_timer.start(1000)
             self.serial_connect_button.setText("Connect")
             self.serial_connected = False
-            fh.exception(e)
+            logging.exception(e)
             # self.connect_or_disconnect()
 
     def clear_console(self):
         try:
             self.serial_console.clear()
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
     
     def filter_console(self):
         try:
@@ -558,7 +558,7 @@ class MainWindow(QMainWindow):
                 serial_filtered_text = '\n'.join(serial_filtered_lines)
                 self.serial_console.setPlainText(serial_filtered_text)
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
 
 
@@ -622,7 +622,7 @@ class MainWindow(QMainWindow):
             self.client_layout.addRow(self.client_console)
             self.client_socket = None
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
     def client_connect_to_server(self):
         try:
@@ -679,7 +679,7 @@ class MainWindow(QMainWindow):
                     self.client_socket =None
                     return
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
     def client_send_data(self):
         try:
@@ -696,7 +696,7 @@ class MainWindow(QMainWindow):
                 self.client_socket.write(QByteArray(client_message))
                 self.client_socket.flush()
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
 
     def client_receive_data(self):
@@ -711,14 +711,14 @@ class MainWindow(QMainWindow):
                 client_tcp_data = self.client_socket.readAll().data().decode()
                 self.log_message(f'Received TCP data: {client_tcp_data}')
         except Exception as e:
-                fh.exception(e)
+                logging.exception(e)
 
 
     def log_message(self, client_message):
         try:
             self.client_console.append(client_message)
         except Exception as e:
-                fh.exception(e)
+                logging.exception(e)
     
 
     def on_client_combo_box_activated(self, index):
@@ -729,7 +729,7 @@ class MainWindow(QMainWindow):
             self.client_send_edit.setDisabled(True)
             self.client_send_button.setDisabled(True)
         except Exception as e:
-                fh.exception(e)
+                logging.exception(e)
     
     def client_socket_display_error(self, client_socket_error):
         try:
@@ -753,7 +753,7 @@ class MainWindow(QMainWindow):
                 self.client_send_edit.setDisabled(True)
                 self.client_send_button.setDisabled(True)
         except Exception as e:
-                fh.exception(e)
+                logging.exception(e)
             
 
 
@@ -766,7 +766,7 @@ class MainWindow(QMainWindow):
                     self.server_http_process.waitForFinished()
             super().closeEvent(event)
         except Exception as e:
-            fh.exception(e)
+            logging.exception(e)
 
 
 
