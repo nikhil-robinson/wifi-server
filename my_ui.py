@@ -639,8 +639,11 @@ class MainWindow(QMainWindow):
         try:
 
             self.client_protocol_combobox = QComboBox()
+            self.client_protocol_combobox.addItem('Select')
+            self.client_protocol_combobox.addItem('HTTP')
             self.client_protocol_combobox.addItem('UDP')
             self.client_protocol_combobox.addItem('TCP')
+            self.client_protocol_combobox.addItem('MQTT')
             self.client_protocol_combobox.activated.connect(self.on_client_combo_box_activated)
 
 
@@ -660,6 +663,7 @@ class MainWindow(QMainWindow):
 
             self.client_connect_button = QPushButton('Connect')
             self.client_connect_button.clicked.connect(self.client_connect_to_server)
+            self.client_connect_button.setDisabled(True)
 
             self.client_send_edit = QLineEdit()
             self.client_send_edit.setDisabled(True)
@@ -698,6 +702,16 @@ class MainWindow(QMainWindow):
     def client_connect_to_server(self):
         try:
             client_protocol = self.client_protocol_combobox.currentText()
+
+            if client_protocol =="HTTP":
+                self.client_send_button.setDisabled(False)
+                if  self.client_connect_button.text() == "GET":
+                    self.client_connect_button.setText("POST")
+                    self.client_send_edit.setDisabled(False)
+                else:
+                    self.client_connect_button.setText("GET")
+                    self.client_send_edit.setDisabled(True)
+                return
             if self.client_ip_edit.text() != "" and self.client_port_edit.text() != "":
                 self.client_url = self.client_ip_edit.text()
                 self.client_port = int(self.client_port_edit.text())
@@ -749,6 +763,15 @@ class MainWindow(QMainWindow):
                     self.client_send_button.setDisabled(True)
                     self.client_socket =None
                     return
+            # elif client_protocol =="HTTP":
+            #         self.client_send_button.setDisabled(False)
+            #         if  self.client_connect_button.text() == "GET":
+            #             self.client_connect_button.setText("POST")
+            #             self.client_send_edit.setDisabled(False)
+            #         else:
+            #             self.client_connect_button.setText("GET")
+            #             self.client_send_edit.setDisabled(True)
+
         except Exception as e:
             logging.exception(e)
 
@@ -797,6 +820,22 @@ class MainWindow(QMainWindow):
             combo_box = self.sender()  # Get the sender of the signal
             client_selected_option = combo_box.itemText(index)  # Get the text of the selected item
             print(f"Activated: {client_selected_option}")
+            if client_selected_option == "Select":
+                self.client_connect_button.setText("Connect")
+                self.client_connect_button.setDisabled(True)
+                self.client_send_edit.setDisabled(True)
+                self.client_send_button.setDisabled(True)
+                return
+            if client_selected_option == "HTTP":
+                self.client_connect_button.setDisabled(False)
+                self.client_connect_button.setText("GET")
+                self.client_send_edit.setDisabled(True)
+                self.client_send_button.setDisabled(False)
+                self.client_send_button.setText("Request")
+                return
+            self.client_send_button.setText("Send")
+            self.client_connect_button.setText("Connect")
+            self.client_connect_button.setDisabled(False)
             self.client_send_edit.setDisabled(True)
             self.client_send_button.setDisabled(True)
         except Exception as e:
