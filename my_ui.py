@@ -5,7 +5,7 @@ import re
 import os
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QGroupBox, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QHBoxLayout, QStackedWidget
-from PyQt6.QtCore import QProcess, QTimer, QRegularExpression, QByteArray
+from PyQt6.QtCore import QProcess, QTimer, QRegularExpression, QByteArray,QEventLoop
 from PyQt6.QtNetwork import QTcpServer, QTcpSocket, QUdpSocket, QHostAddress, QAbstractSocket
 from PyQt6.QtGui import QRegularExpressionValidator
 
@@ -171,6 +171,7 @@ class MainWindow(QMainWindow):
             logging.getLogger().setLevel(logging.DEBUG)
             self.server_http_process = None
             self.server_udp_socket =None
+            self.tcp_server =None
             self.isSERVERstarted = False
         except Exception as e:
             logging.exception(e)
@@ -181,9 +182,9 @@ class MainWindow(QMainWindow):
             if selected_option == "MQTT":
                 self.server_ip_input.setText("127.0.0.1")
                 self.server_ip_input.setDisabled(True)
-                self.server_port_input.setEnabled(True)
-                self.server_send_data.setEnabled(True)
-                self.create_server_button.setEnabled(True)
+                self.server_port_input.setDisabled(False)
+                self.server_send_data.setDisabled(True)
+                self.create_server_button.setDisabled(False)
                 self.server_send_data.setPlaceholderText("Enter topic and data seprated by ':' eg: topic:data")
             elif selected_option == "HTTP":
                 self.server_ip_input.setEnabled(True)
@@ -246,7 +247,7 @@ class MainWindow(QMainWindow):
     def start_tcp_server(self):
         try:
             self.tcp_server = QTcpServer(self)
-            self.tcp_server.listen(QHostAddress("127.0.0.1"), int(self.server_port_input.text()))  # Listen on localhost, port 5000
+            self.tcp_server.listen(QHostAddress(self.server_ip_input.text()), int(self.server_port_input.text()))  # Listen on localhost, port 5000
             self.tcp_server.newConnection.connect(self.tcp_server_handle_connection)
         except Exception as e:
             logging.exception(e)
@@ -299,7 +300,7 @@ class MainWindow(QMainWindow):
             logging.exception(e)
 
     def server_send_data_retuened(self):
-        if self.server_type_combo.currentText() == "MQTT":
+        if self.server_type_combo.currentText() == "MQTT" and self.isSERVERstarted:
             print("Hi mqtt")
             if self.broker_process.state() != QProcess.ProcessState.Running:
                 self.server_console.append("Broker is not running please start the server")
@@ -307,13 +308,18 @@ class MainWindow(QMainWindow):
             if ":" not in self.server_send_data.text():
                 self.server_console.append("Wrong data type secified it should be in the format topic:data")
                 return
+            self._broker_started()
             mqtt_topic,mqtt_data =  self.server_send_data.text().split(":")
-            self.mqtt_server_client.publish(mqtt_topic,mqtt_data)
-            self.server_console.append(f"Published {mqtt_data} to topic {mqtt_topic}")
+            try:
+                self.mqtt_server_client.publish(mqtt_topic,mqtt_data)
+                self.server_console.append(f"Published {mqtt_data} to topic {mqtt_topic}")
+                self.mqtt_server_client.disconnect()
+            except Exception as e:
+                self.server_console.append(e)
 
     def create_server(self):
         try:
-            if self.isSERVERstarted == False or self.server_type_combo.currentText() == "MQTT":
+            if self.isSERVERstarted == False:
                 if self.server_type_combo.currentText() == "--Select Server--" or self.server_ip_input.text() =="" or self.server_port_input.text() =="":
                     self.server_console.append("Please check your configuration")
                     return
@@ -331,42 +337,36 @@ class MainWindow(QMainWindow):
                 elif self.server_type_combo.currentText() == "TCP":
                     print("TCP")
                     self.start_tcp_server()
-                    self.isSERVERstarted = True
-                    self.create_server_button.setText("Stop Server")
                     if self.tcp_server:
+                        self.isSERVERstarted = True
                         self.server_type_combo.setDisabled(True)
                         self.server_ip_input.setDisabled(True)
                         self.server_port_input.setDisabled(True)
-                    self.server_console.append(f"{self.server_type_combo.currentText()} Server created on {self.server_ip_input.text()}:{self.server_port_input.text()}")
+                        self.create_server_button.setText("Stop Server")
+                        self.server_console.append(f"{self.server_type_combo.currentText()} Server created on {self.server_ip_input.text()}:{self.server_port_input.text()}")
                     
                 elif self.server_type_combo.currentText() == "UDP":
                     print("UDP")
                     self.start_udp_server()
                     if self.server_udp_socket:
                         self.isSERVERstarted = True
-                        self.create_server_button.setText("Stop Server")
                         self.server_type_combo.setDisabled(True)
                         self.server_ip_input.setDisabled(True)
                         self.server_port_input.setDisabled(True)
-                    self.server_console.append(f"{self.server_type_combo.currentText()} Server created on {self.server_ip_input.text()}:{self.server_port_input.text()}")
+                        self.create_server_button.setText("Stop Server")
+                        self.server_console.append(f"{self.server_type_combo.currentText()} Server created on {self.server_ip_input.text()}:{self.server_port_input.text()}")
 
 
                 elif self.server_type_combo.currentText() == "MQTT":
-                    
+                    self.server_type_combo.setDisabled(True)
+                    self.server_ip_input.setDisabled(True)
+                    self.server_port_input.setDisabled(True)
+                    self.server_send_data.setDisabled(True)
                     self.broker_process = QProcess(self)
                     self.broker_process.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels)
                     self.broker_process.readyReadStandardOutput.connect(self.broker_process_output)
                     self.broker_process.finished.connect(self.broker_process_finished)
                     self.broker_process.start("mosquitto", [ "-p", self.server_port_input.text()])
-                    if self.broker_process.state() == QProcess.ProcessState.Running:
-                        self.server_console.append("Created mosquitto broker")
-                        self.mqtt_server_client = mqtt.Client()
-                        self.mqtt_server_client.connect(self.server_ip_input.text(),int(self.server_port_input.text()))
-                        self.isSERVERstarted = True
-                        self.create_server_button.setText("Stop Server")
-                        
-                    else:
-                        self.server_console.append("Failed to create mosquitto broker")
 
                 else:
                     self.server_console.append("Please select a server type")
@@ -375,26 +375,51 @@ class MainWindow(QMainWindow):
                 if self.server_http_process:
                     self.server_http_process.terminate()
                     self.server_http_process.waitForFinished()
+                    self.isSERVERstarted = False
+                    self.server_type_combo.setDisabled(False)
+                    self.server_ip_input.setDisabled(False)
+                    self.server_port_input.setDisabled(False)
+                    self.server_send_data.setDisabled(False)
+                    self.server_http_process = None
                 elif self.server_udp_socket:
                     self.server_udp_socket.deleteLater()
+                    self.server_type_combo.setDisabled(False)
+                    self.server_ip_input.setDisabled(False)
+                    self.server_port_input.setDisabled(False)
+                    self.server_send_data.setDisabled(True)
+                    self.server_udp_socket = None
                 elif self.tcp_server:
                     self.tcp_server.deleteLater()
-                elif self.broker_process and self.mqtt_server_client:
-                    self.mqtt_server_client.disconnect()
+                    self.server_type_combo.setDisabled(False)
+                    self.server_ip_input.setDisabled(False)
+                    self.server_port_input.setDisabled(False)
+                    self.server_send_data.setDisabled(True)
+                    self.tcp_server = None
+                    
+                elif self.broker_process:
+                    # self.mqtt_server_client.disconnect()
                     self.broker_process.terminate()
                     self.broker_process.waitForFinished()
-                self.create_server_button.setText("Sart Server")
+                    self.server_type_combo.setDisabled(False)
+                    self.server_ip_input.setDisabled(True)
+                    self.server_port_input.setDisabled(False)
+                    self.server_send_data.setDisabled(True)
+                else:
+                    return
                 self.isSERVERstarted = False
-                self.server_type_combo.setDisabled(False)
-                self.server_ip_input.setDisabled(False)
-                self.server_port_input.setDisabled(False)
-                self.server_send_data.setDisabled(False)
+                self.create_server_button.setText("Sart Server")
                 self.server_console.append(f"{self.server_type_combo.currentText()} Server Stoped!")
 
         except Exception as e:
             logging.exception(e)
 
-    
+    def _broker_started(self):
+        
+        self.mqtt_server_client = mqtt.Client()
+        self.mqtt_server_client.connect("127.0.0.1",int(self.server_port_input.text()))
+        self.isSERVERstarted = True
+        
+
     def on_serverButton_clicked(self):
         #hellp
         try:
@@ -405,9 +430,26 @@ class MainWindow(QMainWindow):
     def broker_process_output(self):
         broker_output = bytes(self.broker_process.readAllStandardOutput()).decode()
         self.server_console.append(broker_output)
+        if re.search(r"mosquitto version .* running", broker_output):
+            self.server_send_data.setDisabled(False)
+            self.server_console.append("Created mosquitto broker")
+            self.server_console.append("enter topic:data on the response filed above and press enter to publish")
+            self.create_server_button.setText("Stop Server")
+            self.isSERVERstarted = True
+            # self._broker_started()
+        if re.search(r"Error", broker_output):
+            self.server_console.append("Failed to create mosquitto broker")
+            self.create_server_button.setText("Start Server")
+            self.server_send_data.setDisabled(True)
+            self.server_type_combo.setDisabled(False)
+            self.server_port_input.setDisabled(False)
+            self.isSERVERstarted = False
+
+            
+
     def broker_process_finished(self):
-        self.server_http_process.terminate()
-        self.server_http_process.waitForFinished()
+        self.broker_process.terminate()
+        self.broker_process.waitForFinished()
 
         
     
@@ -793,6 +835,10 @@ class MainWindow(QMainWindow):
                 if self.server_http_process.state() != QProcess.ProcessState.NotRunning:
                     self.server_http_process.terminate()
                     self.server_http_process.waitForFinished()
+            if self.broker_process is not None:
+                self.broker_process.terminate()
+                self.broker_process.waitForFinished()
+
             super().closeEvent(event)
         except Exception as e:
             logging.exception(e)

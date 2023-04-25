@@ -33,3 +33,138 @@ Traceback (most recent call last):
   File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 360, in create_server
     self.server_http_process.start("mosquitto", [ "-p", self.server_port_input.text()])
 AttributeError: 'NoneType' object has no attribute 'start'
+2023-04-25 06:32:13,894 - root - ERROR - [Errno 111] Connection refused
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 364, in create_server
+    self.mqtt_server_client.connect(self.server_ip_input.text(),int(self.server_port_input.text()))
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 914, in connect
+    return self.reconnect()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 1044, in reconnect
+    sock = self._create_socket_connection()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 3685, in _create_socket_connection
+    return socket.create_connection(addr, timeout=self._connect_timeout, source_address=source)
+  File "/usr/lib/python3.10/socket.py", line 845, in create_connection
+    raise err
+  File "/usr/lib/python3.10/socket.py", line 833, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+2023-04-25 06:36:48,876 - root - ERROR - [Errno 111] Connection refused
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 364, in create_server
+    self.mqtt_server_client.connect("127.0.0.1",int(self.server_port_input.text()))
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 914, in connect
+    return self.reconnect()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 1044, in reconnect
+    sock = self._create_socket_connection()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 3685, in _create_socket_connection
+    return socket.create_connection(addr, timeout=self._connect_timeout, source_address=source)
+  File "/usr/lib/python3.10/socket.py", line 845, in create_connection
+    raise err
+  File "/usr/lib/python3.10/socket.py", line 833, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+2023-04-25 06:47:11,152 - root - ERROR - [Errno 111] Connection refused
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 364, in create_server
+    self.mqtt_server_client.connect("127.0.0.1",int(self.server_port_input.text()))
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 914, in connect
+    return self.reconnect()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 1044, in reconnect
+    sock = self._create_socket_connection()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 3685, in _create_socket_connection
+    return socket.create_connection(addr, timeout=self._connect_timeout, source_address=source)
+  File "/usr/lib/python3.10/socket.py", line 845, in create_connection
+    raise err
+  File "/usr/lib/python3.10/socket.py", line 833, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+2023-04-25 06:53:42,566 - root - ERROR - [Errno 111] Connection refused
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 364, in create_server
+    self.mqtt_server_client.connect("127.0.0.1",int(self.server_port_input.text()))
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 914, in connect
+    return self.reconnect()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 1044, in reconnect
+    sock = self._create_socket_connection()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 3685, in _create_socket_connection
+    return socket.create_connection(addr, timeout=self._connect_timeout, source_address=source)
+  File "/usr/lib/python3.10/socket.py", line 845, in create_connection
+    raise err
+  File "/usr/lib/python3.10/socket.py", line 833, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+2023-04-25 06:57:17,138 - root - ERROR - [Errno 111] Connection refused
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 367, in create_server
+    self.mqtt_server_client.connect("127.0.0.1",int(self.server_port_input.text()))
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 914, in connect
+    return self.reconnect()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 1044, in reconnect
+    sock = self._create_socket_connection()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 3685, in _create_socket_connection
+    return socket.create_connection(addr, timeout=self._connect_timeout, source_address=source)
+  File "/usr/lib/python3.10/socket.py", line 845, in create_connection
+    raise err
+  File "/usr/lib/python3.10/socket.py", line 833, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+2023-04-25 06:59:50,017 - root - ERROR - 'MainWindow' object has no attribute 'broker_process'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 800, in closeEvent
+    if self.broker_process is not None:
+AttributeError: 'MainWindow' object has no attribute 'broker_process'
+2023-04-25 07:04:42,047 - root - ERROR - [Errno 111] Connection refused
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 367, in create_server
+    self.mqtt_server_client.connect("127.0.0.1",int(self.server_port_input.text()))
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 914, in connect
+    return self.reconnect()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 1044, in reconnect
+    sock = self._create_socket_connection()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 3685, in _create_socket_connection
+    return socket.create_connection(addr, timeout=self._connect_timeout, source_address=source)
+  File "/usr/lib/python3.10/socket.py", line 845, in create_connection
+    raise err
+  File "/usr/lib/python3.10/socket.py", line 833, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+2023-04-25 07:23:52,591 - root - ERROR - 'MainWindow' object has no attribute 'broker_process'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 809, in closeEvent
+    if self.broker_process is not None:
+AttributeError: 'MainWindow' object has no attribute 'broker_process'
+2023-04-25 07:26:05,577 - root - ERROR - 'MainWindow' object has no attribute 'tcp_server'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 382, in create_server
+    elif self.tcp_server:
+AttributeError: 'MainWindow' object has no attribute 'tcp_server'
+2023-04-25 07:55:12,608 - root - ERROR - 'MainWindow' object has no attribute 'broker_process'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 820, in closeEvent
+    self.broker_process.terminate()
+AttributeError: 'MainWindow' object has no attribute 'broker_process'
+2023-04-25 07:56:29,664 - root - ERROR - 'MainWindow' object has no attribute 'mqtt_server_client'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 383, in create_server
+    self.mqtt_server_client.disconnect()
+AttributeError: 'MainWindow' object has no attribute 'mqtt_server_client'
+2023-04-25 08:07:53,393 - root - ERROR - 'MainWindow' object has no attribute 'broker_process'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 835, in closeEvent
+    if self.broker_process is not None:
+AttributeError: 'MainWindow' object has no attribute 'broker_process'
+2023-04-25 08:11:21,577 - root - ERROR - wrapped C/C++ object of type QUdpSocket has been deleted
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 384, in create_server
+    self.server_udp_socket.deleteLater()
+RuntimeError: wrapped C/C++ object of type QUdpSocket has been deleted
+2023-04-25 08:11:34,802 - root - ERROR - 'MainWindow' object has no attribute 'broker_process'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 835, in closeEvent
+    if self.broker_process is not None:
+AttributeError: 'MainWindow' object has no attribute 'broker_process'
+2023-04-25 08:14:00,165 - root - ERROR - 'MainWindow' object has no attribute 'broker_process'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 838, in closeEvent
+    if self.broker_process is not None:
+AttributeError: 'MainWindow' object has no attribute 'broker_process'
