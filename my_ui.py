@@ -3,6 +3,7 @@ import logging
 import serial.tools.list_ports
 import re
 import os
+import requests
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QGroupBox, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QHBoxLayout, QStackedWidget
 from PyQt6.QtCore import QProcess, QTimer, QRegularExpression, QByteArray,QEventLoop
@@ -705,6 +706,7 @@ class MainWindow(QMainWindow):
 
             if client_protocol =="HTTP":
                 self.client_send_button.setDisabled(False)
+                
                 if  self.client_connect_button.text() == "GET":
                     self.client_connect_button.setText("POST")
                     self.client_send_edit.setDisabled(False)
@@ -777,6 +779,7 @@ class MainWindow(QMainWindow):
 
     def client_send_data(self):
         try:
+            print("send button clicked")
             if self.client_protocol_combobox.currentText() == 'UDP':
                 print("UDP")
                 client_message = self.client_send_edit.text().encode()
@@ -789,6 +792,13 @@ class MainWindow(QMainWindow):
                 client_message = self.client_send_edit.text().encode()
                 self.client_socket.write(QByteArray(client_message))
                 self.client_socket.flush()
+            elif self.client_protocol_combobox.currentText() == 'HTTP':
+                print(f"send button clicked for htt with {self.client_connect_button.text()}")
+                if self.client_connect_button.text() == "GET":
+                    self.client_http_get_request()
+                else:
+                    self.client_http_post_request()
+                
         except Exception as e:
             logging.exception(e)
 
@@ -864,6 +874,20 @@ class MainWindow(QMainWindow):
                 self.client_send_button.setDisabled(True)
         except Exception as e:
                 logging.exception(e)
+
+    def client_http_get_request(self):
+        http_client_url = f"http://{self.client_url}:{self.client_port}/"
+        self.log_message(f"Performing GET : {http_client_url}")
+        
+        response = requests.get(http_client_url)
+        self.log_message(response.text)
+
+    def client_http_post_request(self):
+        http_client_url = f"http://{self.client_url}:{self.client_port}/"
+        self.client_console.append(f"Performing POST : {http_client_url}")
+        # params = self.param_edit.text()
+        response = requests.post(http_client_url, data=url)
+        self.client_console.append(response.text)
             
 
 

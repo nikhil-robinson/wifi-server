@@ -258,3 +258,227 @@ Traceback (most recent call last):
   File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 877, in closeEvent
     if self.broker_process is not None:
 AttributeError: 'MainWindow' object has no attribute 'broker_process'
+2023-04-25 09:25:49,642 - root - ERROR - 'MainWindow' object has no attribute 'broker_process'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in closeEvent
+    if self.broker_process is not None:
+AttributeError: 'MainWindow' object has no attribute 'broker_process'
+2023-04-25 09:29:51,783 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 795, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 876, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:31:45,055 - root - ERROR - 'MainWindow' object has no attribute 'broker_process'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 895, in closeEvent
+    if self.server_http_process.state() != QProcess.ProcessState.NotRunning:
+AttributeError: 'MainWindow' object has no attribute 'broker_process'
+2023-04-25 09:32:17,033 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 795, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 876, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:32:17,816 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 795, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 876, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:32:28,087 - root - ERROR - 'MainWindow' object has no attribute 'broker_process'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 898, in closeEvent
+    if self.broker_process is not None:
+AttributeError: 'MainWindow' object has no attribute 'broker_process'
+2023-04-25 09:36:55,925 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 796, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 877, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:36:58,252 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 796, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 877, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:37:08,290 - root - ERROR - 'MainWindow' object has no attribute 'broker_process'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 899, in closeEvent
+    if self.broker_process is not None:
+AttributeError: 'MainWindow' object has no attribute 'broker_process'
+2023-04-25 09:39:32,166 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:39:33,366 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:39:34,022 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:39:34,678 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:39:35,182 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:39:35,646 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:39:36,102 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:39:36,894 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:39:37,318 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:39:44,182 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:40:13,470 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:40:19,054 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:40:19,831 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:40:20,206 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:40:20,478 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:40:20,670 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:40:20,878 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 797, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 878, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:40:46,957 - root - ERROR - 'MainWindow' object has no attribute 'broker_process'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 900, in closeEvent
+    if self.broker_process is not None:
+AttributeError: 'MainWindow' object has no attribute 'broker_process'
+2023-04-25 09:43:27,077 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 798, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 879, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:43:27,825 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 798, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 879, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:43:28,089 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 798, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 879, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:43:28,281 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 798, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 879, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:43:28,449 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 798, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 879, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-04-25 09:44:03,496 - root - ERROR - 'MainWindow' object has no attribute 'broker_process'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 901, in closeEvent
+    if self.broker_process is not None:
+AttributeError: 'MainWindow' object has no attribute 'broker_process'
+2023-04-25 09:45:59,217 - root - ERROR - 'MainWindow' object has no attribute 'broker_process'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 901, in closeEvent
+    if self.broker_process is not None:
+AttributeError: 'MainWindow' object has no attribute 'broker_process'
