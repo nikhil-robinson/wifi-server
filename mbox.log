@@ -783,3 +783,78 @@ Traceback (most recent call last):
   File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 769, in client_connect_to_server
     self.client_socket.connectToHost(self.client_url, self.client_port)
 AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 04:21:25,551 - root - ERROR - 'MainWindow' object has no attribute 'mqtt_client'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 796, in client_connect_to_server
+    if self.mqtt_client == None:
+AttributeError: 'MainWindow' object has no attribute 'mqtt_client'
+2023-05-01 04:21:26,727 - root - ERROR - 'MainWindow' object has no attribute 'mqtt_client'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 796, in client_connect_to_server
+    if self.mqtt_client == None:
+AttributeError: 'MainWindow' object has no attribute 'mqtt_client'
+2023-05-01 04:21:27,349 - root - ERROR - 'MainWindow' object has no attribute 'mqtt_client'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 796, in client_connect_to_server
+    if self.mqtt_client == None:
+AttributeError: 'MainWindow' object has no attribute 'mqtt_client'
+2023-05-01 04:21:27,783 - root - ERROR - 'MainWindow' object has no attribute 'mqtt_client'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 796, in client_connect_to_server
+    if self.mqtt_client == None:
+AttributeError: 'MainWindow' object has no attribute 'mqtt_client'
+2023-05-01 04:21:28,111 - root - ERROR - 'MainWindow' object has no attribute 'mqtt_client'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 796, in client_connect_to_server
+    if self.mqtt_client == None:
+AttributeError: 'MainWindow' object has no attribute 'mqtt_client'
+2023-05-01 04:21:28,615 - root - ERROR - 'MainWindow' object has no attribute 'mqtt_client'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 796, in client_connect_to_server
+    if self.mqtt_client == None:
+AttributeError: 'MainWindow' object has no attribute 'mqtt_client'
+2023-05-01 04:21:29,047 - root - ERROR - 'MainWindow' object has no attribute 'mqtt_client'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 796, in client_connect_to_server
+    if self.mqtt_client == None:
+AttributeError: 'MainWindow' object has no attribute 'mqtt_client'
+2023-05-01 04:21:29,791 - root - ERROR - 'MainWindow' object has no attribute 'mqtt_client'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 796, in client_connect_to_server
+    if self.mqtt_client == None:
+AttributeError: 'MainWindow' object has no attribute 'mqtt_client'
+2023-05-01 04:21:30,519 - root - ERROR - 'MainWindow' object has no attribute 'mqtt_client'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 796, in client_connect_to_server
+    if self.mqtt_client == None:
+AttributeError: 'MainWindow' object has no attribute 'mqtt_client'
+2023-05-01 04:24:02,586 - root - ERROR - [Errno 111] Connection refused
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 810, in client_connect_to_server
+    self.mqtt_client.connect(self.client_url,port=self.client_port)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 914, in connect
+    return self.reconnect()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 1044, in reconnect
+    sock = self._create_socket_connection()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 3685, in _create_socket_connection
+    return socket.create_connection(addr, timeout=self._connect_timeout, source_address=source)
+  File "/usr/lib/python3.10/socket.py", line 845, in create_connection
+    raise err
+  File "/usr/lib/python3.10/socket.py", line 833, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+2023-05-01 04:36:10,634 - root - ERROR - [Errno 111] Connection refused
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 822, in client_connect_to_server
+    self.mqtt_client.connect(self.client_url,port=self.client_port)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 914, in connect
+    return self.reconnect()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 1044, in reconnect
+    sock = self._create_socket_connection()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/paho/mqtt/client.py", line 3685, in _create_socket_connection
+    return socket.create_connection(addr, timeout=self._connect_timeout, source_address=source)
+  File "/usr/lib/python3.10/socket.py", line 845, in create_connection
+    raise err
+  File "/usr/lib/python3.10/socket.py", line 833, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused

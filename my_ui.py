@@ -58,6 +58,8 @@ class MainWindow(QMainWindow):
 
             # Create a label for the right side text
             self.right_text = QLabel("This is the default text.")
+
+            self.main_console = None
             self.serverConf()
             self.serialConf()
             self.client_conf()
@@ -431,6 +433,10 @@ class MainWindow(QMainWindow):
         #hellp
         try:
             self.stacked_widget.setCurrentWidget(self.server_form_widget)
+            server_log_handler = QTextEditHandler(self.server_console)
+            logging.getLogger().addHandler(server_log_handler)
+            logging.getLogger().setLevel(logging.DEBUG)
+            
         except Exception as e:
             logging.exception(e)
     
@@ -463,12 +469,18 @@ class MainWindow(QMainWindow):
     def on_clientButton_clicked(self):
         try:
             self.stacked_widget.setCurrentWidget(self.client_form_widget)
+            client_log_handler = QTextEditHandler(self.client_console)
+            logging.getLogger().addHandler(client_log_handler)
+            logging.getLogger().setLevel(logging.DEBUG)
         except Exception as e:
             logging.exception(e)
     
     def on_serialButton_clicked(self):
         try:
             self.stacked_widget.setCurrentWidget(self.serial_form_widget)
+            seraial_log_handler = QTextEditHandler(self.serial_console)
+            logging.getLogger().addHandler(seraial_log_handler)
+            logging.getLogger().setLevel(logging.DEBUG)
         except Exception as e:
             logging.exception(e)
 
@@ -695,14 +707,17 @@ class MainWindow(QMainWindow):
 
             self.client_form_widget = QWidget()
             self.client_form_widget.setLayout(self.client_layout)
+            self.client_send_label = QLabel()
+            self.client_send_label.setText("Send :")
 
             # self.client_layout.addRow('Protocol:', self.client_protocol_combobox)
             self.client_layout.addRow(self.client_link_layout)
             # self.client_layout.addRow(self.client_connect_button)
-            self.client_layout.addRow('Send Data:', self.client_send_edit)
+            self.client_layout.addRow(self.client_send_label, self.client_send_edit)
             self.client_layout.addRow(self.client_send_button)
             self.client_layout.addRow(self.client_console)
             self.client_socket = None
+            self.mqtt_client = None
         except Exception as e:
             logging.exception(e)
 
@@ -792,9 +807,46 @@ class MainWindow(QMainWindow):
                     self.client_ip_edit.setDisabled(False)
                     self.client_port_edit.setDisabled(False)
                     return
+            elif client_protocol == 'MQTT':
+                if self.mqtt_client == None:
+                    if self.client_ip_edit.text() != "" and self.client_port_edit.text() != "":
+                        self.client_url = self.client_ip_edit.text()
+                        self.client_port = int(self.client_port_edit.text())
+                        self.log_message(f'GOT {self.client_url} {self.client_port}')
+                    else:
+                        self.log_message('Error: Check your IP and PORT number.')
+                        self.client_send_edit.setDisabled(True)
+                        self.client_send_button.setDisabled(True)
+                        return
+                    self.mqtt_client = mqtt.Client()
+                    self.mqtt_client.on_connect = self.on_connect
+                    self.mqtt_client.on_message = self.on_message
+                    self.mqtt_client.connect(self.client_url,port=self.client_port)
+                    self.mqtt_client.loop_start()
+                    if not self.mqtt_client == None:
+                        self.client_send_edit.setDisabled(False)
+                        self.client_send_button.setDisabled(False)
+                        self.client_protocol_combobox.setDisabled(True)
+                        self.client_ip_edit.setDisabled(True)
+                        self.client_port_edit.setDisabled(True)
+                        self.client_connect_button.setText("Disconnect")
+                        return
+                
+                self.client_connect_button.setText("Connect")
+                self.client_protocol_combobox.setDisabled(False)
+                self.client_send_edit.setDisabled(True)
+                self.client_send_button.setDisabled(True)
+                self.client_ip_edit.setDisabled(False)
+                self.client_port_edit.setDisabled(False)
+
 
         except Exception as e:
             logging.exception(e)
+    def on_connect(self, client, userdata, flags, rc):
+        self.log_message(f"Connected with result code {str(rc)}")
+
+    def on_message(self, client, userdata, message):
+        self.log_message(f"Received message '{str(message.payload)}' on topic '{message.topic}'")
 
     def client_send_data(self):
         try:
@@ -830,6 +882,12 @@ class MainWindow(QMainWindow):
                     self.client_http_put_request()
                 elif self.client_connect_button.text() == "DELETE":
                     self.client_http_post_request()
+            elif self.client_protocol_combobox.currentText() == 'MQTT':
+                mqtt_topic = self.client_send_edit.text()
+                self.mqtt_client.unsubscribe(mqtt_topic)
+                self.mqtt_client.subscribe(mqtt_topic)
+                self.log_message(f'subscribed to topic :{mqtt_topic}')
+
                 
         except Exception as e:
             logging.exception(e)
@@ -863,19 +921,31 @@ class MainWindow(QMainWindow):
             client_selected_option = combo_box.itemText(index)  # Get the text of the selected item
             print(f"Activated: {client_selected_option}")
             if client_selected_option == "Select":
+                self.client_send_label.setText("Send :")
                 self.client_connect_button.setText("Connect")
                 self.client_connect_button.setDisabled(True)
                 self.client_send_edit.setDisabled(True)
                 self.client_send_button.setDisabled(True)
                 return
             if client_selected_option == "HTTP":
+                self.client_send_label.setText("Send :")
                 self.client_connect_button.setDisabled(False)
                 self.client_connect_button.setText("GET")
                 self.client_send_edit.setDisabled(True)
                 self.client_send_button.setDisabled(False)
                 self.client_send_button.setText("Request")
                 return
+            if client_selected_option == "MQTT":
+                self.client_send_label.setText("Topic :")
+                self.client_connect_button.setDisabled(False)
+                self.client_connect_button.setText("Connect")
+                self.client_send_edit.setDisabled(True)
+                self.client_send_button.setDisabled(False)
+                self.client_send_button.setText("Subscribe")
+                self.client_send_button.setDisabled(True)
+                return
             self.client_send_button.setText("Send")
+            self.client_send_label.setText("Send :")
             self.client_connect_button.setText("Connect")
             self.client_connect_button.setDisabled(False)
             self.client_send_edit.setDisabled(True)
