@@ -482,3 +482,222 @@ Traceback (most recent call last):
   File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 901, in closeEvent
     if self.broker_process is not None:
 AttributeError: 'MainWindow' object has no attribute 'broker_process'
+2023-05-01 02:31:34,436 - root - ERROR - [Errno 20] Not a directory: '/home/nikhil/Desktop/Nikhil/wifi-server/files/index.html'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 216, in start_http_server
+    os.chdir(self.server_send_data.text())
+NotADirectoryError: [Errno 20] Not a directory: '/home/nikhil/Desktop/Nikhil/wifi-server/files/index.html'
+2023-05-01 02:31:53,411 - root - ERROR - 'MainWindow' object has no attribute 'broker_process'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 400, in create_server
+    elif self.broker_process:
+AttributeError: 'MainWindow' object has no attribute 'broker_process'
+2023-05-01 02:32:07,816 - root - ERROR - 'MainWindow' object has no attribute 'broker_process'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 901, in closeEvent
+    if self.broker_process is not None:
+AttributeError: 'MainWindow' object has no attribute 'broker_process'
+2023-05-01 02:40:28,619 - root - DEBUG - dir fbgbxrgbx does not exist
+2023-05-01 02:54:08,493 - root - DEBUG - dir sfvsrf does not exist
+2023-05-01 02:54:51,341 - root - DEBUG - dir /home/nikhil/Desktop/Nikhil/wifi-server/files/index.html does not exist
+2023-05-01 02:55:24,000 - root - DEBUG - Linking dir /home/nikhil/Desktop/Nikhil/wifi-server/files/
+2023-05-01 02:55:35,143 - root - DEBUG - 127.0.0.1 - - [01/May/2023 02:55:35] "GET / HTTP/1.1" 200 -
+
+2023-05-01 02:55:36,013 - root - DEBUG - 127.0.0.1 - - [01/May/2023 02:55:36] code 404, message File not found
+127.0.0.1 - - [01/May/2023 02:55:36] "GET /favicon.ico HTTP/1.1" 404 -
+
+2023-05-01 02:56:13,612 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 804, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 885, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:03:11,747 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 804, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 885, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:06:34,063 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 809, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 890, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:10:21,280 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): 127.0.0.1:12345
+2023-05-01 03:10:21,282 - root - ERROR - HTTPConnectionPool(host='127.0.0.1', port=12345): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fa4eade9cc0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/urllib3/connection.py", line 169, in _new_conn
+    conn = connection.create_connection(
+  File "/usr/lib/python3/dist-packages/urllib3/util/connection.py", line 96, in create_connection
+    raise err
+  File "/usr/lib/python3/dist-packages/urllib3/util/connection.py", line 86, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 699, in urlopen
+    httplib_response = self._make_request(
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 394, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/usr/lib/python3/dist-packages/urllib3/connection.py", line 234, in request
+    super(HTTPConnection, self).request(method, url, body=body, headers=headers)
+  File "/usr/lib/python3.10/http/client.py", line 1282, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/lib/python3.10/http/client.py", line 1328, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/lib/python3.10/http/client.py", line 1277, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/lib/python3.10/http/client.py", line 1037, in _send_output
+    self.send(msg)
+  File "/usr/lib/python3.10/http/client.py", line 975, in send
+    self.connect()
+  File "/usr/lib/python3/dist-packages/urllib3/connection.py", line 200, in connect
+    conn = self._new_conn()
+  File "/usr/lib/python3/dist-packages/urllib3/connection.py", line 181, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x7fa4eade9cc0>: Failed to establish a new connection: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/requests/adapters.py", line 439, in send
+    resp = conn.urlopen(
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 755, in urlopen
+    retries = retries.increment(
+  File "/usr/lib/python3/dist-packages/urllib3/util/retry.py", line 574, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=12345): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fa4eade9cc0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 892, in client_http_get_request
+    response = requests.get(http_client_url)
+  File "/usr/lib/python3/dist-packages/requests/api.py", line 76, in get
+    return request('get', url, params=params, **kwargs)
+  File "/usr/lib/python3/dist-packages/requests/api.py", line 61, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python3/dist-packages/requests/sessions.py", line 542, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python3/dist-packages/requests/sessions.py", line 655, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python3/dist-packages/requests/adapters.py", line 516, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=12345): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fa4eade9cc0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2023-05-01 03:12:06,829 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): 127.0.0.1:12345
+2023-05-01 03:12:06,832 - urllib3.connectionpool - DEBUG - http://127.0.0.1:12345 "GET / HTTP/1.1" 200 1763
+2023-05-01 03:12:06,844 - root - DEBUG - 127.0.0.1 - - [01/May/2023 03:12:06] "GET / HTTP/1.1" 200 -
+
+2023-05-01 03:12:49,860 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:12:52,435 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:12:52,867 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:12:53,227 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:12:53,475 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:12:53,707 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:12:53,923 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:12:54,139 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:12:54,339 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:12:54,531 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:12:54,731 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:12:54,939 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:12:55,155 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:12:55,363 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:12:56,067 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 808, in client_send_data
+    self.client_http_get_request()
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
+    http_client_url = f"http://{self.client_url}:{self.client_port}/"
+AttributeError: 'MainWindow' object has no attribute 'client_url'

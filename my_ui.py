@@ -173,6 +173,7 @@ class MainWindow(QMainWindow):
             self.server_http_process = None
             self.server_udp_socket =None
             self.tcp_server =None
+            self.broker_process =None
             self.isSERVERstarted = False
         except Exception as e:
             logging.exception(e)
@@ -211,11 +212,14 @@ class MainWindow(QMainWindow):
         try:
         # Start HTTP server on serial_port 80
             self.cwd = None
-            if os.path.exists(self.server_send_data.text()) and self.server_send_data.text() !="":
-                self.cwd =os.getcwd()
-                os.chdir(self.server_send_data.text())
-                logging.debug(f"Linking dir {self.server_send_data.text()}")
-
+            if self.server_send_data.text() !="":
+                if not os.path.isdir(self.server_send_data.text()):
+                    logging.debug(f"dir {self.server_send_data.text()} is not a dir")
+                    return
+                if os.path.exists(self.server_send_data.text()):
+                    self.cwd =os.getcwd()
+                    os.chdir(self.server_send_data.text())
+                    logging.debug(f"Linking dir {self.server_send_data.text()}")
             self.server_http_process = QProcess(self)
             self.server_http_process.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels)
             self.server_http_process.readyReadStandardOutput.connect(self.http_handle_output)
@@ -327,14 +331,16 @@ class MainWindow(QMainWindow):
                 if self.server_type_combo.currentText() == "HTTP":
                     print("Http")
                     self.start_http_server()
-                    self.isSERVERstarted = True
-                    self.create_server_button.setText("Stop Server")
                     if self.server_http_process:
                         self.server_type_combo.setDisabled(True)
                         self.server_ip_input.setDisabled(True)
                         self.server_port_input.setDisabled(True)
                         self.server_send_data.setDisabled(True)
-                    self.server_console.append(f"{self.server_type_combo.currentText()} Server created on {self.server_ip_input.text()}:{self.server_port_input.text()}")
+                        self.server_console.append(f"{self.server_type_combo.currentText()} Server created on {self.server_ip_input.text()}:{self.server_port_input.text()}")
+                        return
+                    self.server_console.append(f"Failed to create {self.server_type_combo.currentText()} Server on {self.server_ip_input.text()}:{self.server_port_input.text()}")
+
+                    
                 elif self.server_type_combo.currentText() == "TCP":
                     print("TCP")
                     self.start_tcp_server()
@@ -706,23 +712,25 @@ class MainWindow(QMainWindow):
 
             if client_protocol =="HTTP":
                 self.client_send_button.setDisabled(False)
+                if self.client_ip_edit.text() != "" and self.client_port_edit.text() != "":
+                    self.client_url = self.client_ip_edit.text()
+                    self.client_port = int(self.client_port_edit.text())
+                    self.log_message(f'GOT {self.client_url} {self.client_port}')
+                else:
+                    self.log_message('Error: Check your IP and PORT number.')
+                    self.client_send_edit.setDisabled(True)
+                    self.client_send_button.setDisabled(True)
+                    return
                 
                 if  self.client_connect_button.text() == "GET":
                     self.client_connect_button.setText("POST")
                     self.client_send_edit.setDisabled(False)
+                    return
                 else:
                     self.client_connect_button.setText("GET")
                     self.client_send_edit.setDisabled(True)
-                return
-            if self.client_ip_edit.text() != "" and self.client_port_edit.text() != "":
-                self.client_url = self.client_ip_edit.text()
-                self.client_port = int(self.client_port_edit.text())
-
-            else:
-                self.log_message('Error: Check your IP and PORT number.')
-                self.client_send_edit.setDisabled(True)
-                self.client_send_button.setDisabled(True)
-                return
+                    return
+                
 
             if self.client_socket is not None: 
                 if self.client_socket.isOpen():
@@ -733,7 +741,7 @@ class MainWindow(QMainWindow):
                 self.client_send_edit.setDisabled(True)
                 self.client_send_button.setDisabled(True)
 
-            elif client_protocol == 'UDP':
+            if client_protocol == 'UDP':
                 self.client_socket = QUdpSocket(self)
                 self.client_socket.readyRead.connect(self.client_receive_data)
                 self.client_socket.errorOccurred.connect(self.client_socket_display_error)
@@ -742,6 +750,7 @@ class MainWindow(QMainWindow):
                     self.client_send_button.setDisabled(False)
                     self.client_protocol_combobox.setDisabled(True)
                     self.client_connect_button.setText("Disconnect")
+                    return
                 else:
                     self.log_message('Error: Creating the socket.')
                     self.client_send_edit.setDisabled(True)
@@ -759,6 +768,7 @@ class MainWindow(QMainWindow):
                     self.client_send_button.setDisabled(False)
                     self.client_protocol_combobox.setDisabled(True)
                     self.client_connect_button.setText("Disconnect")
+                    return
                 else:
                     self.log_message('Error: Creating the socket.')
                     self.client_send_edit.setDisabled(True)
@@ -886,7 +896,7 @@ class MainWindow(QMainWindow):
         http_client_url = f"http://{self.client_url}:{self.client_port}/"
         self.client_console.append(f"Performing POST : {http_client_url}")
         # params = self.param_edit.text()
-        response = requests.post(http_client_url, data=url)
+        response = requests.post(http_client_url, data="HI")
         self.client_console.append(response.text)
             
 
