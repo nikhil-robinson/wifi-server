@@ -701,3 +701,20 @@ Traceback (most recent call last):
   File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 889, in client_http_get_request
     http_client_url = f"http://{self.client_url}:{self.client_port}/"
 AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:30:30,900 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): 127.0.0.1:12345
+2023-05-01 03:30:30,903 - urllib3.connectionpool - DEBUG - http://127.0.0.1:12345 "GET / HTTP/1.1" 200 1763
+2023-05-01 03:30:30,914 - root - DEBUG - 127.0.0.1 - - [01/May/2023 03:30:30] "GET / HTTP/1.1" 200 -
+
+2023-05-01 03:31:04,283 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): 127.0.0.1:12345
+2023-05-01 03:31:04,286 - urllib3.connectionpool - DEBUG - http://127.0.0.1:12345 "GET / HTTP/1.1" 200 1763
+2023-05-01 03:31:04,293 - root - DEBUG - 127.0.0.1 - - [01/May/2023 03:31:04] "GET / HTTP/1.1" 200 -
+
+2023-05-01 03:36:33,260 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): 127.0.0.1:12345
+2023-05-01 03:36:33,263 - urllib3.connectionpool - DEBUG - http://127.0.0.1:12345 "GET / HTTP/1.1" 200 1763
+2023-05-01 03:36:33,287 - root - DEBUG - 127.0.0.1 - - [01/May/2023 03:36:33] "GET / HTTP/1.1" 200 -
+
+2023-05-01 03:36:48,916 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): 127.0.0.1:12345
+2023-05-01 03:36:48,918 - urllib3.connectionpool - DEBUG - http://127.0.0.1:12345 "POST / HTTP/1.1" 501 497
+2023-05-01 03:36:48,921 - root - DEBUG - 127.0.0.1 - - [01/May/2023 03:36:48] code 501, message Unsupported method ('POST')
+127.0.0.1 - - [01/May/2023 03:36:48] "POST / HTTP/1.1" 501 -
+

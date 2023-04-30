@@ -712,26 +712,23 @@ class MainWindow(QMainWindow):
 
             if client_protocol =="HTTP":
                 self.client_send_button.setDisabled(False)
-                if self.client_ip_edit.text() != "" and self.client_port_edit.text() != "":
-                    self.client_url = self.client_ip_edit.text()
-                    self.client_port = int(self.client_port_edit.text())
-                    self.log_message(f'GOT {self.client_url} {self.client_port}')
-                else:
-                    self.log_message('Error: Check your IP and PORT number.')
-                    self.client_send_edit.setDisabled(True)
-                    self.client_send_button.setDisabled(True)
-                    return
-                
                 if  self.client_connect_button.text() == "GET":
                     self.client_connect_button.setText("POST")
                     self.client_send_edit.setDisabled(False)
+                    return
+                if  self.client_connect_button.text() == "POST":
+                    self.client_connect_button.setText("PUT")
+                    self.client_send_edit.setDisabled(False)
+                    return
+                if  self.client_connect_button.text() == "PUT":
+                    self.client_connect_button.setText("DELETE")
+                    self.client_send_edit.setDisabled(True)
                     return
                 else:
                     self.client_connect_button.setText("GET")
                     self.client_send_edit.setDisabled(True)
                     return
                 
-
             if self.client_socket is not None: 
                 if self.client_socket.isOpen():
                     self.client_socket.close()
@@ -775,14 +772,6 @@ class MainWindow(QMainWindow):
                     self.client_send_button.setDisabled(True)
                     self.client_socket =None
                     return
-            # elif client_protocol =="HTTP":
-            #         self.client_send_button.setDisabled(False)
-            #         if  self.client_connect_button.text() == "GET":
-            #             self.client_connect_button.setText("POST")
-            #             self.client_send_edit.setDisabled(False)
-            #         else:
-            #             self.client_connect_button.setText("GET")
-            #             self.client_send_edit.setDisabled(True)
 
         except Exception as e:
             logging.exception(e)
@@ -790,6 +779,15 @@ class MainWindow(QMainWindow):
     def client_send_data(self):
         try:
             print("send button clicked")
+            if self.client_ip_edit.text() != "" and self.client_port_edit.text() != "":
+                self.client_url = self.client_ip_edit.text()
+                self.client_port = int(self.client_port_edit.text())
+                self.log_message(f'GOT {self.client_url} {self.client_port}')
+            else:
+                self.log_message('Error: Check your IP and PORT number.')
+                self.client_send_edit.setDisabled(True)
+                self.client_send_button.setDisabled(True)
+                return
             if self.client_protocol_combobox.currentText() == 'UDP':
                 print("UDP")
                 client_message = self.client_send_edit.text().encode()
@@ -806,7 +804,11 @@ class MainWindow(QMainWindow):
                 print(f"send button clicked for htt with {self.client_connect_button.text()}")
                 if self.client_connect_button.text() == "GET":
                     self.client_http_get_request()
-                else:
+                elif self.client_connect_button.text() == "POST":
+                    self.client_http_post_request()
+                elif self.client_connect_button.text() == "PUT":
+                    self.client_http_put_request()
+                elif self.client_connect_button.text() == "DELETE":
                     self.client_http_post_request()
                 
         except Exception as e:
@@ -896,8 +898,23 @@ class MainWindow(QMainWindow):
         http_client_url = f"http://{self.client_url}:{self.client_port}/"
         self.client_console.append(f"Performing POST : {http_client_url}")
         # params = self.param_edit.text()
-        response = requests.post(http_client_url, data="HI")
+        response = requests.post(http_client_url, data=self.client_send_edit.text())
         self.client_console.append(response.text)
+    
+    def client_http_put_request(self):
+        http_client_url = f"http://{self.client_url}:{self.client_port}/"
+        self.client_console.append(f"Performing POST : {http_client_url}")
+        # params = self.param_edit.text()
+        response = requests.put(http_client_url, data=self.client_send_edit.text())
+        self.client_console.append(response.text)
+    
+    def client_http_put_request(self):
+        http_client_url = f"http://{self.client_url}:{self.client_port}/"
+        self.client_console.append(f"Performing POST : {http_client_url}")
+        # params = self.param_edit.text()
+        response = requests.delete(http_client_url)
+        self.client_console.append(response.text)
+
             
 
 
