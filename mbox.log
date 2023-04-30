@@ -718,3 +718,68 @@ AttributeError: 'MainWindow' object has no attribute 'client_url'
 2023-05-01 03:36:48,921 - root - DEBUG - 127.0.0.1 - - [01/May/2023 03:36:48] code 501, message Unsupported method ('POST')
 127.0.0.1 - - [01/May/2023 03:36:48] "POST / HTTP/1.1" 501 -
 
+2023-05-01 03:55:59,357 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 769, in client_connect_to_server
+    self.client_socket.connectToHost(self.client_url, self.client_port)
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:56:00,638 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 769, in client_connect_to_server
+    self.client_socket.connectToHost(self.client_url, self.client_port)
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:56:02,022 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 769, in client_connect_to_server
+    self.client_socket.connectToHost(self.client_url, self.client_port)
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:56:02,926 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 769, in client_connect_to_server
+    self.client_socket.connectToHost(self.client_url, self.client_port)
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:56:03,850 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 769, in client_connect_to_server
+    self.client_socket.connectToHost(self.client_url, self.client_port)
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:56:04,718 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 769, in client_connect_to_server
+    self.client_socket.connectToHost(self.client_url, self.client_port)
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:56:05,630 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 769, in client_connect_to_server
+    self.client_socket.connectToHost(self.client_url, self.client_port)
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:56:06,494 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 769, in client_connect_to_server
+    self.client_socket.connectToHost(self.client_url, self.client_port)
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:56:08,006 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 769, in client_connect_to_server
+    self.client_socket.connectToHost(self.client_url, self.client_port)
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:56:08,806 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 769, in client_connect_to_server
+    self.client_socket.connectToHost(self.client_url, self.client_port)
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:56:09,518 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 769, in client_connect_to_server
+    self.client_socket.connectToHost(self.client_url, self.client_port)
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:56:10,078 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 769, in client_connect_to_server
+    self.client_socket.connectToHost(self.client_url, self.client_port)
+AttributeError: 'MainWindow' object has no attribute 'client_url'
+2023-05-01 03:56:50,065 - root - ERROR - 'MainWindow' object has no attribute 'client_url'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 769, in client_connect_to_server
+    self.client_socket.connectToHost(self.client_url, self.client_port)
+AttributeError: 'MainWindow' object has no attribute 'client_url'

@@ -737,6 +737,9 @@ class MainWindow(QMainWindow):
                 self.client_protocol_combobox.setDisabled(False)
                 self.client_send_edit.setDisabled(True)
                 self.client_send_button.setDisabled(True)
+                self.client_ip_edit.setDisabled(False)
+                self.client_port_edit.setDisabled(False)
+                return
 
             if client_protocol == 'UDP':
                 self.client_socket = QUdpSocket(self)
@@ -745,6 +748,8 @@ class MainWindow(QMainWindow):
                 if self.client_socket is not None:
                     self.client_send_edit.setDisabled(False)
                     self.client_send_button.setDisabled(False)
+                    self.client_ip_edit.setDisabled(True)
+                    self.client_port_edit.setDisabled(True)
                     self.client_protocol_combobox.setDisabled(True)
                     self.client_connect_button.setText("Disconnect")
                     return
@@ -752,10 +757,21 @@ class MainWindow(QMainWindow):
                     self.log_message('Error: Creating the socket.')
                     self.client_send_edit.setDisabled(True)
                     self.client_send_button.setDisabled(True)
+                    self.client_ip_edit.setDisabled(False)
+                    self.client_port_edit.setDisabled(False)
                     self.client_socket =None
                     return
 
             elif client_protocol == 'TCP':
+                if self.client_ip_edit.text() != "" and self.client_port_edit.text() != "":
+                    self.client_url = self.client_ip_edit.text()
+                    self.client_port = int(self.client_port_edit.text())
+                    self.log_message(f'GOT {self.client_url} {self.client_port}')
+                else:
+                    self.log_message('Error: Check your IP and PORT number.')
+                    self.client_send_edit.setDisabled(True)
+                    self.client_send_button.setDisabled(True)
+                    return
                 self.client_socket = QTcpSocket()
                 self.client_socket.readyRead.connect(self.client_receive_data)
                 self.client_socket.errorOccurred.connect(self.client_socket_display_error)
@@ -764,6 +780,8 @@ class MainWindow(QMainWindow):
                     self.client_send_edit.setDisabled(False)
                     self.client_send_button.setDisabled(False)
                     self.client_protocol_combobox.setDisabled(True)
+                    self.client_ip_edit.setDisabled(True)
+                    self.client_port_edit.setDisabled(True)
                     self.client_connect_button.setText("Disconnect")
                     return
                 else:
@@ -771,6 +789,8 @@ class MainWindow(QMainWindow):
                     self.client_send_edit.setDisabled(True)
                     self.client_send_button.setDisabled(True)
                     self.client_socket =None
+                    self.client_ip_edit.setDisabled(False)
+                    self.client_port_edit.setDisabled(False)
                     return
 
         except Exception as e:
