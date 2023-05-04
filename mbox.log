@@ -858,3 +858,571 @@ Traceback (most recent call last):
   File "/usr/lib/python3.10/socket.py", line 833, in create_connection
     sock.connect(sa)
 ConnectionRefusedError: [Errno 111] Connection refused
+2023-05-05 00:36:10,854 - root - ERROR - index 1 has type 'list' but 'str' is expected
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 500, in serialConf
+    self.serial_port_combo.addItems(serial_ports)
+TypeError: index 1 has type 'list' but 'str' is expected
+2023-05-05 00:40:09,612 - root - ERROR - index 0 has type 'generator' but 'str' is expected
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 500, in serialConf
+    self.serial_port_combo.addItems(serial_ports)
+TypeError: index 0 has type 'generator' but 'str' is expected
+2023-05-05 01:14:30,738 - root - ERROR - addWidget(self, a0: QWidget, stretch: int = 0, alignment: Qt.AlignmentFlag = Qt.Alignment()): argument 1 has unexpected type 'str'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 545, in serialConf
+    self.serial_orgnise.addWidget("Port:")
+TypeError: addWidget(self, a0: QWidget, stretch: int = 0, alignment: Qt.AlignmentFlag = Qt.Alignment()): argument 1 has unexpected type 'str'
+2023-05-05 01:54:12,455 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:20,663 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:21,151 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:26,400 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:27,320 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:28,056 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:34,640 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:35,335 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:35,864 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:37,711 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:38,568 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:39,032 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:39,415 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:39,792 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:44,656 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:45,184 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:45,544 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:47,848 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:48,208 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:48,592 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:48,968 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:49,320 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:49,696 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:50,080 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:50,472 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:50,856 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:51,224 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:51,592 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:51,960 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:52,296 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:54:56,672 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 01:56:54,168 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 02:02:12,604 - root - ERROR - [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+Traceback (most recent call last):
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+PermissionError: [Errno 13] Permission denied: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 619, in connect_or_disconnect
+    self.serial = serial.Serial(serial_port, baudrate)
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/nikhil/.local/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+2023-05-05 02:08:44,358 - root - ERROR - 'MainWindow' object has no attribute 'serial_line_end'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 647, in serial_send_data
+    self.serial.write(self.serial_line_end)
+AttributeError: 'MainWindow' object has no attribute 'serial_line_end'
+2023-05-05 02:18:02,019 - root - ERROR - 'MainWindow' object has no attribute 'serial_console_stop_scroll'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 665, in read_serial
+    if self.serial_console_stop_scroll:
+AttributeError: 'MainWindow' object has no attribute 'serial_console_stop_scroll'
+2023-05-05 02:26:59,408 - root - ERROR - 'MainWindow' object has no attribute 'serial_scrollbar'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 667, in read_serial
+    self.serial_scrollbar.setValue(self.serial_scroll_pos)
+AttributeError: 'MainWindow' object has no attribute 'serial_scrollbar'
+2023-05-05 02:28:14,241 - root - ERROR - 'NoneType' object has no attribute 'setValue'
+Traceback (most recent call last):
+  File "/home/nikhil/Desktop/Nikhil/wifi-server/my_ui.py", line 668, in read_serial
+    self.serial_scrollbar.setValue(self.serial_scroll_pos)
+AttributeError: 'NoneType' object has no attribute 'setValue'
+2023-05-05 03:54:14,522 - root - DEBUG - 127.0.0.1 - - [05/May/2023 03:54:14] "GET / HTTP/1.1" 200 -
+
+2023-05-05 03:54:15,422 - root - DEBUG - 127.0.0.1 - - [05/May/2023 03:54:15] code 404, message File not found
+127.0.0.1 - - [05/May/2023 03:54:15] "GET /favicon.ico HTTP/1.1" 404 -
+

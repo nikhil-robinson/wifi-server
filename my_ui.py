@@ -5,13 +5,64 @@ import re
 import os
 import requests
 
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QGroupBox, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QHBoxLayout, QStackedWidget
-from PyQt6.QtCore import QProcess, QTimer, QRegularExpression, QByteArray,QEventLoop
+from PyQt6.QtWidgets import QApplication,QDialog, QMainWindow, QWidget, QVBoxLayout, QGroupBox, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QHBoxLayout, QStackedWidget,QCheckBox
+from PyQt6.QtCore import QProcess, QTimer, QRegularExpression, QByteArray
 from PyQt6.QtNetwork import QTcpServer, QTcpSocket, QUdpSocket, QHostAddress, QAbstractSocket
 from PyQt6.QtGui import QRegularExpressionValidator
 
 import paho.mqtt.client as mqtt
 
+class serial_PopupWindow(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Popup Window")
+
+
+        self.serial_parity_combo = QComboBox()
+        self.serial_parity_combo.addItems(['NONE', 'EVEN', 'ODD', 'SPACE','MARK','NAMES'])
+
+        parity_layout = QHBoxLayout()
+        parity_layout.addWidget(QLabel("Parity"))
+        parity_layout.addWidget(self.serial_parity_combo)
+
+        self.serial_stopbits_combo = QComboBox()
+        self.serial_stopbits_combo.addItems(['1', '2'])
+
+        stopbits_layout = QHBoxLayout()
+        stopbits_layout.addWidget(QLabel("Stop Bits"))
+        stopbits_layout.addWidget(self.serial_stopbits_combo)
+
+        self.serial_bytesize_combo = QComboBox()
+        self.serial_bytesize_combo.addItems(['5', '6', '7', '8'])
+
+        bytesize_layout = QHBoxLayout()
+        bytesize_layout.addWidget(QLabel("Byte size"))
+        bytesize_layout.addWidget(self.serial_bytesize_combo)
+
+        ok_button = QPushButton("OK", self)
+        ok_button.clicked.connect(self.accept)
+
+        cancel_button = QPushButton("Cancel", self)
+        cancel_button.clicked.connect(self.reject)
+
+        buttons_layout = QHBoxLayout()
+        buttons_layout.addWidget(ok_button)
+        buttons_layout.addWidget(cancel_button)
+
+        main_layout = QVBoxLayout()
+        main_layout.addLayout(parity_layout)
+        main_layout.addLayout(stopbits_layout)
+        main_layout.addLayout(bytesize_layout)
+        main_layout.addLayout(buttons_layout)
+
+        self.setLayout(main_layout)
+
+                # self.parity = self.serial_parity_combo.currentText()
+                # self.stopbits =self.serial_stopbits_combo.currentText()
+                # self.bytesize =self.serial_bytesize_combo.currentText()
+
+    def get_settings_value(self):
+        return self.serial_parity_combo.currentText() ,self.serial_stopbits_combo.currentText(),self.serial_bytesize_combo.currentText()
 
 class QTextEditHandler(logging.Handler):
     def __init__(self, serial_console):
@@ -489,9 +540,9 @@ class MainWindow(QMainWindow):
 
     def serialConf(self):
         try:
-
             self.serial_form_widget = QWidget()
             self.serial_form_layout = QFormLayout()
+            self.serial_orgnise = QHBoxLayout()
             self.serial_form_widget.setLayout(self.serial_form_layout)
             self.serial_port_combo = QComboBox()
             serial_ports = [p.device for p in serial.tools.list_ports.comports()]
@@ -502,6 +553,10 @@ class MainWindow(QMainWindow):
             self.serial_baudrate_combo.addItems(["9600", "19200", "38400", "57600", "115200"])
             self.serial_port_combo.setCurrentIndex(0)
 
+            self.lineending_combobox = QComboBox()
+            self.lineending_combobox.addItems(['NONE', 'NL', 'CR', 'NL & CR'])
+            self.lineending_combobox.currentIndexChanged.connect(self.handle_lineending_change)
+
 
             self.serial_connect_button = QPushButton("Connect")
             self.serial_connect_button.clicked.connect(self.connect_or_disconnect)
@@ -511,6 +566,9 @@ class MainWindow(QMainWindow):
 
             self.serial_filter_button = QPushButton('Filter')
             self.serial_filter_button.clicked.connect(self.filter_console)
+
+            self.serial_connect_button = QPushButton("Settings")
+            self.serial_connect_button.clicked.connect(self.serial_show_popup)
 
             # Create a QLineEdit widget for entering filter serial_pattern
             self.serial_filter_pattern = QLineEdit()
@@ -525,20 +583,40 @@ class MainWindow(QMainWindow):
 
 
             self.serial_send_input = QLineEdit()
-            self.serial_send_input.returnPressed.connect(self.send)
+            self.serial_send_input.returnPressed.connect(self.serial_send_data)
             
             self.serial_send_button = QPushButton("Send")
-            self.serial_send_button.clicked.connect(self.send)
+            self.serial_send_button.clicked.connect(self.serial_send_data)
 
 
-            self.serial_form_layout.addRow(QLabel("Port:"), self.serial_port_combo)
-            self.serial_form_layout.addRow(QLabel("Baudrate:"), self.serial_baudrate_combo)
+            # self.serial_form_layout.addRow(QLabel("Port:"), self.serial_port_combo)
+            # self.serial_form_layout.addRow(QLabel("Baudrate:"), self.serial_baudrate_combo)
 
 
-            self.serial_form_layout.addRow(self.serial_clear_button, self.serial_connect_button)
+            # self.serial_form_layout.addRow(self.serial_clear_button, self.serial_connect_button)
             
-            self.serial_form_layout.addRow(self.serial_filter_pattern, self.serial_filter_button)
+            # self.serial_form_layout.addRow(self.serial_filter_pattern, self.serial_filter_button)
 
+            self.autoscroll_checkbox = QCheckBox('Enable Autoscroll')
+            self.autoscroll_checkbox.setChecked(True)
+            self.autoscroll_checkbox.stateChanged.connect(self.handle_autoscroll_change)
+
+
+            self.serial_orgnise.addWidget(QLabel("Device:"))
+            self.serial_orgnise.addWidget(self.serial_port_combo)
+            self.serial_orgnise.addWidget(QLabel("Port:"))
+            self.serial_orgnise.addWidget(self.serial_baudrate_combo)
+            self.serial_orgnise.addWidget(QLabel("Line Encoding:"))
+            self.serial_orgnise.addWidget(self.lineending_combobox)
+            self.serial_orgnise.addWidget(self.autoscroll_checkbox)
+            self.serial_orgnise.addWidget(self.serial_connect_button)
+            self.serial_orgnise.addWidget(self.serial_clear_button)
+            self.serial_orgnise.addWidget(self.serial_connect_button)
+            
+
+
+            self.serial_form_layout.addRow(self.serial_orgnise)
+            self.serial_form_layout.addRow(self.serial_filter_pattern)
             self.serial_form_layout.addRow(self.serial_console)
 
 
@@ -550,6 +628,10 @@ class MainWindow(QMainWindow):
 
             self.serial = None
             self.serial_connected = False
+            self.serial_line_end = b''
+            self.serial_console_stop_scroll = True
+            self.serial_scrollbar =self.serial_console.verticalScrollBar()
+            self.serial_scroll_pos = self.serial_scrollbar.value()
 
             self.serial_s_timer = QTimer()
             self.serial_s_timer.timeout.connect(self.read_serial)
@@ -557,8 +639,45 @@ class MainWindow(QMainWindow):
             self.serial_p_timer =QTimer()
             self.serial_p_timer.timeout.connect(self.refresh_ports)
             self.serial_p_timer.start(1000)
+
+            self.parity = serial.PARITY_NONE
+            self.stopbits =serial.STOPBITS_ONE
+            self.bytesize =serial.EIGHTBITS
+
+            self.parity_dict = {'NONE': serial.PARITY_NONE, 'ODD': serial.PARITY_ODD, 'EVEN': serial.PARITY_EVEN,'MARK': serial.PARITY_MARK, 'NAMES': serial.PARITY_NAMES,'SPACE': serial.PARITY_SPACE}
+            self.stopbits_dict = {'1':serial.STOPBITS_ONE,'1.5':serial.STOPBITS_ONE_POINT_FIVE,'2':serial.STOPBITS_TWO}
+            self.bytesize_dict = {}
         except Exception as e:
             logging.exception(e)
+
+
+    def serial_show_popup(self):
+        popup = serial_PopupWindow(self)
+        if popup.exec() == QDialog.accepted:
+            parity,stopbits,bytesize = popup.get_settings_value()
+            self.parity =self.parity_dict[parity]
+            self.stopbits = self.stopbits_dict[stopbits]
+            self.bytesize =self.bytesize_dict[bytesize]
+        else:
+            print("Cancel button clicked")
+    
+    def handle_lineending_change(self, index):
+        if index == 0:
+            self.serial_line_end =b''
+        elif index == 1:
+            self.serial_line_end =b'\n'
+        elif index == 2:
+            self.serial_line_end =b'\r'
+        elif index == 3:
+            self.serial_line_end =b'\n\r'
+            
+    def handle_autoscroll_change(self, state):
+        if state == 2:
+            self.serial_console_stop_scroll = True
+            self.serial_scrollbar =self.serial_console.verticalScrollBar()
+            self.serial_scroll_pos = self.serial_scrollbar.value()
+        else:
+            self.serial_console_stop_scroll = False
 
     def refresh_ports(self):
         try:
@@ -575,7 +694,8 @@ class MainWindow(QMainWindow):
                 self.serial_p_timer.stop()
                 serial_port = self.serial_port_combo.currentText()
                 baudrate = self.serial_baudrate_combo.currentText()
-                self.serial = serial.Serial(serial_port, baudrate)
+
+                self.serial = serial.Serial(serial_port, baudrate,timeout=1, parity=self.parity, stopbits=self.stopbits, bytesize=self.bytesize)
                 self.serial_s_timer.start(100)
                 self.serial_connect_button.setText("Disconnect")
                 self.serial_connected = True
@@ -597,12 +717,15 @@ class MainWindow(QMainWindow):
 
 
 
-    def send(self):
+    def serial_send_data(self):
         try:
             if self.serial_connected:
-                serial_data = self.serial_send_input.text()
-                self.serial.write(serial_data.encode())
+                self.serial_s_timer.stop()
+                data = self.serial_send_input.text()
+                self.serial.write(data.encode())
+                self.serial.write(self.serial_line_end)
                 self.serial_send_input.clear()
+                self.serial_s_timer.start(100)
         except Exception as e:
             logging.exception(e)
 
@@ -617,6 +740,8 @@ class MainWindow(QMainWindow):
                 serial_data = re.sub(serial_pattern, '', serial_data)
                 # Append serial_data to serial_console
                 self.serial_console.append(serial_data)
+                if self.serial_console_stop_scroll:
+                    self.serial_scrollbar.setValue(self.serial_scroll_pos)
         except Exception as e:
             self.serial_console.append(f"Error Occured {e}")
             self.serial_s_timer.stop()

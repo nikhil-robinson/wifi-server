@@ -8,6 +8,26 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QFo
 from PyQt6.QtCore import Qt, QProcess,QTimer
 
 
+# import serial
+
+# # Open serial port
+# ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS)
+
+# # Disable flow control
+# ser.setDTR(False)
+# ser.setRTS(False)
+
+# # Send data
+# ser.write(b'WHO\n')
+
+# # Read response
+# response = ser.readline().decode().strip()
+# print(response)
+
+# # Close serial port
+# ser.close()
+
+
 
 
 class MainWindow(QMainWindow):
