@@ -543,9 +543,11 @@ class MainWindow(QMainWindow):
         try:
             self.serial_form_widget = QWidget()
             self.serial_form_layout = QFormLayout()
+
             self.serial_orgnise = QHBoxLayout()
             self.serial_form_widget.setLayout(self.serial_form_layout)
             self.serial_port_combo = QComboBox()
+
             serialPortInfos = QtSerialPort.QSerialPortInfo.availablePorts()
             serial_ports = [p.portName() for p in serialPortInfos]
             self.serial_port_combo.addItems(serial_ports)
@@ -710,6 +712,9 @@ class MainWindow(QMainWindow):
                     return
                 
                 self.serial_connect_button.setText("Disconnect")
+                self.serial_settings_button.setDisabled(True)
+                self.serial_port_combo.setDisabled(True)
+                self.serial_baudrate_combo.setDisabled(True)
                 self.serial_connected = True
 
 
@@ -718,6 +723,9 @@ class MainWindow(QMainWindow):
                 self.serial_port.close()
                 self.serial_port=None
                 self.serial_connect_button.setText("Connect")
+                self.serial_settings_button.setDisabled(False)
+                self.serial_port_combo.setDisabled(False)
+                self.serial_baudrate_combo.setDisabled(False)
                 self.serial_connected = False
                 self.serial_p_timer.start()
         except Exception as e:
