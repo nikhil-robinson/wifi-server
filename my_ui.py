@@ -6,27 +6,28 @@ import os
 import requests
 
 from PyQt6.QtWidgets import QApplication,QDialog, QMainWindow, QWidget, QVBoxLayout, QGroupBox, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QHBoxLayout, QStackedWidget,QCheckBox
-from PyQt6.QtCore import QProcess, QTimer, QRegularExpression, QByteArray
+from PyQt6.QtCore import QProcess, QTimer, QRegularExpression, QByteArray,QIODevice
 from PyQt6.QtNetwork import QTcpServer, QTcpSocket, QUdpSocket, QHostAddress, QAbstractSocket
 from PyQt6.QtGui import QRegularExpressionValidator
+from PyQt6 import QtSerialPort
 
 import paho.mqtt.client as mqtt
 
 class serial_PopupWindow(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("Popup Window")
+        self.setWindowTitle("Settings")
 
 
         self.serial_parity_combo = QComboBox()
-        self.serial_parity_combo.addItems(['NONE', 'EVEN', 'ODD', 'SPACE','MARK','NAMES'])
+        self.serial_parity_combo.addItems(['NONE', 'EVEN', 'ODD', 'SPACE','MARK'])
 
         parity_layout = QHBoxLayout()
         parity_layout.addWidget(QLabel("Parity"))
         parity_layout.addWidget(self.serial_parity_combo)
 
         self.serial_stopbits_combo = QComboBox()
-        self.serial_stopbits_combo.addItems(['1', '2'])
+        self.serial_stopbits_combo.addItems(['1','1.5', '2'])
 
         stopbits_layout = QHBoxLayout()
         stopbits_layout.addWidget(QLabel("Stop Bits"))
@@ -545,7 +546,8 @@ class MainWindow(QMainWindow):
             self.serial_orgnise = QHBoxLayout()
             self.serial_form_widget.setLayout(self.serial_form_layout)
             self.serial_port_combo = QComboBox()
-            serial_ports = [p.device for p in serial.tools.list_ports.comports()]
+            serialPortInfos = QtSerialPort.QSerialPortInfo.availablePorts()
+            serial_ports = [p.portName() for p in serialPortInfos]
             self.serial_port_combo.addItems(serial_ports)
             self.serial_port_combo.setCurrentIndex(0)
 
@@ -567,8 +569,8 @@ class MainWindow(QMainWindow):
             self.serial_filter_button = QPushButton('Filter')
             self.serial_filter_button.clicked.connect(self.filter_console)
 
-            self.serial_connect_button = QPushButton("Settings")
-            self.serial_connect_button.clicked.connect(self.serial_show_popup)
+            self.serial_settings_button = QPushButton("Settings")
+            self.serial_settings_button.clicked.connect(self.serial_show_popup)
 
             # Create a QLineEdit widget for entering filter serial_pattern
             self.serial_filter_pattern = QLineEdit()
@@ -611,7 +613,7 @@ class MainWindow(QMainWindow):
             self.serial_orgnise.addWidget(self.autoscroll_checkbox)
             self.serial_orgnise.addWidget(self.serial_connect_button)
             self.serial_orgnise.addWidget(self.serial_clear_button)
-            self.serial_orgnise.addWidget(self.serial_connect_button)
+            self.serial_orgnise.addWidget(self.serial_settings_button)
             
 
 
@@ -633,27 +635,26 @@ class MainWindow(QMainWindow):
             self.serial_scrollbar =self.serial_console.verticalScrollBar()
             self.serial_scroll_pos = self.serial_scrollbar.value()
 
-            self.serial_s_timer = QTimer()
-            self.serial_s_timer.timeout.connect(self.read_serial)
 
             self.serial_p_timer =QTimer()
             self.serial_p_timer.timeout.connect(self.refresh_ports)
             self.serial_p_timer.start(1000)
 
-            self.parity = serial.PARITY_NONE
-            self.stopbits =serial.STOPBITS_ONE
-            self.bytesize =serial.EIGHTBITS
+            self.parity = QtSerialPort.QSerialPort.Parity.NoParity
+            self.stopbits =QtSerialPort.QSerialPort.StopBits.OneStop
+            self.bytesize =QtSerialPort.QSerialPort.DataBits.Data8
 
-            self.parity_dict = {'NONE': serial.PARITY_NONE, 'ODD': serial.PARITY_ODD, 'EVEN': serial.PARITY_EVEN,'MARK': serial.PARITY_MARK, 'NAMES': serial.PARITY_NAMES,'SPACE': serial.PARITY_SPACE}
-            self.stopbits_dict = {'1':serial.STOPBITS_ONE,'1.5':serial.STOPBITS_ONE_POINT_FIVE,'2':serial.STOPBITS_TWO}
-            self.bytesize_dict = {}
+            self.parity_dict = {'NONE': QtSerialPort.QSerialPort.Parity.NoParity, 'ODD': QtSerialPort.QSerialPort.Parity.OddParity, 'EVEN': QtSerialPort.QSerialPort.Parity.EvenParity,'MARK': QtSerialPort.QSerialPort.Parity.MarkParity,'SPACE': QtSerialPort.QSerialPort.Parity.SpaceParity}
+            self.stopbits_dict = {'1':QtSerialPort.QSerialPort.StopBits.OneStop,'1.5':QtSerialPort.QSerialPort.StopBits.OneAndHalfStop,'2':QtSerialPort.QSerialPort.StopBits.TwoStop}
+            self.bytesize_dict = {'5':QtSerialPort.QSerialPort.DataBits.Data5,'6':QtSerialPort.QSerialPort.DataBits.Data6,'7':QtSerialPort.QSerialPort.DataBits.Data7,'8':QtSerialPort.QSerialPort.DataBits.Data8}
+
         except Exception as e:
             logging.exception(e)
 
 
     def serial_show_popup(self):
         popup = serial_PopupWindow(self)
-        if popup.exec() == QDialog.accepted:
+        if popup.exec() == 1:
             parity,stopbits,bytesize = popup.get_settings_value()
             self.parity =self.parity_dict[parity]
             self.stopbits = self.stopbits_dict[stopbits]
@@ -681,7 +682,8 @@ class MainWindow(QMainWindow):
 
     def refresh_ports(self):
         try:
-            serial_ports = [p.device for p in serial.tools.list_ports.comports()]
+            serialPortInfos = QtSerialPort.QSerialPortInfo.availablePorts()
+            serial_ports = [p.portName() for p in serialPortInfos]
             self.serial_port_combo.clear()
             self.serial_port_combo.addItems(serial_ports)
             # time.sleep(1)
@@ -694,24 +696,30 @@ class MainWindow(QMainWindow):
                 self.serial_p_timer.stop()
                 serial_port = self.serial_port_combo.currentText()
                 baudrate = self.serial_baudrate_combo.currentText()
-
-                self.serial = serial.Serial(serial_port, baudrate,timeout=1, parity=self.parity, stopbits=self.stopbits, bytesize=self.bytesize)
-                self.serial_s_timer.start(100)
+                self.serial_console.append(f'Connecting to {serial_port} with baudrate {baudrate} parity {self.parity} stop bits {self.stopbits} Data bits {self.bytesize}')
+                self.serial_port = QtSerialPort.QSerialPort()
+                self.serial_port.setPortName(serial_port)
+                self.serial_port.setBaudRate(int(baudrate))
+                self.serial_port.setDataBits(self.bytesize)
+                self.serial_port.setParity(self.parity)
+                self.serial_port.setStopBits(self.stopbits)
+                self.serial_port.readyRead.connect(self.read_serial)
+                # self.serial_port.errorOccurred.connect(self.handle_error)
+                if not self.serial_port.open(QIODevice.OpenModeFlag.ReadWrite):
+                    self.serial_console.append("Error", f"Could not open serial port {self.serial_port.portName()}")
+                    return
+                
                 self.serial_connect_button.setText("Disconnect")
                 self.serial_connected = True
 
-                # Start thread to read from serial
-                # self.serial_thread = threading.Thread(target=self.read_serial, daemon=True)
-                # self.serial_thread.start()
 
 
             else:
-                self.serial_s_timer.stop()
-                self.serial.close()
-                self.serial=None
-                self.serial_p_timer.start(1000)
+                self.serial_port.close()
+                self.serial_port=None
                 self.serial_connect_button.setText("Connect")
                 self.serial_connected = False
+                self.serial_p_timer.start()
         except Exception as e:
             logging.exception(e)
 
@@ -719,13 +727,10 @@ class MainWindow(QMainWindow):
 
     def serial_send_data(self):
         try:
-            if self.serial_connected:
-                self.serial_s_timer.stop()
-                data = self.serial_send_input.text()
-                self.serial.write(data.encode())
-                self.serial.write(self.serial_line_end)
-                self.serial_send_input.clear()
-                self.serial_s_timer.start(100)
+            data = self.serial_send_input.text()
+            self.serial_port.write(data.encode())
+            self.serial_port.write(self.serial_line_end)
+            self.serial_send_input.clear()
         except Exception as e:
             logging.exception(e)
 
@@ -733,23 +738,12 @@ class MainWindow(QMainWindow):
 
     def read_serial(self):
         try:
-            if self.serial and self.serial.in_waiting > 0:
-                # Read serial_data from serial serial_port
-                serial_data = self.serial.readline().decode().strip()
-                serial_pattern = r'\033\[[0-9;]*m'  # Pattern to remove escape sequences
-                serial_data = re.sub(serial_pattern, '', serial_data)
-                # Append serial_data to serial_console
-                self.serial_console.append(serial_data)
-                if self.serial_console_stop_scroll:
-                    self.serial_scrollbar.setValue(self.serial_scroll_pos)
+            serial_data = self.serial_port.readAll().data().decode()
+            self.serial_console.append(serial_data)
+            if self.serial_console_stop_scroll:
+                self.serial_scrollbar.setValue(self.serial_scroll_pos)
         except Exception as e:
             self.serial_console.append(f"Error Occured {e}")
-            self.serial_s_timer.stop()
-            self.serial.close()
-            self.serial=None
-            self.serial_p_timer.start(1000)
-            self.serial_connect_button.setText("Connect")
-            self.serial_connected = False
             logging.exception(e)
             # self.connect_or_disconnect()
 
