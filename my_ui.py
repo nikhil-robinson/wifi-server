@@ -1,14 +1,13 @@
 import sys
 import logging
-import serial.tools.list_ports
 import re
 import os
 import requests
 
 from PyQt6.QtWidgets import QApplication,QDialog, QMainWindow, QWidget, QVBoxLayout, QGroupBox, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QHBoxLayout, QStackedWidget,QCheckBox
-from PyQt6.QtCore import QProcess, QTimer, QRegularExpression, QByteArray,QIODevice
+from PyQt6.QtCore import QProcess, QTimer, QRegularExpression, QByteArray,QIODevice,QSize
 from PyQt6.QtNetwork import QTcpServer, QTcpSocket, QUdpSocket, QHostAddress, QAbstractSocket
-from PyQt6.QtGui import QRegularExpressionValidator
+from PyQt6.QtGui import QRegularExpressionValidator,QIcon
 from PyQt6 import QtSerialPort
 
 import paho.mqtt.client as mqtt
@@ -88,25 +87,36 @@ class MainWindow(QMainWindow):
 
             # Create a group box for the left sidebar
             self.left_bar_group = QGroupBox("Tools")
-            self.left_bar_group_layout = QVBoxLayout()
+            self.left_bar_group_layout = QFormLayout()
             self.left_bar_group.setLayout(self.left_bar_group_layout)
-            self.left_bar_group.setFixedWidth(100)
 
             # Create buttons for the left sidebar
-            self.server_button = QPushButton("Server")
-            self.client_button = QPushButton("Client")
-            self.serial_button = QPushButton("Serial")
-            self.network_button = QPushButton("Network")
-            self.security_button = QPushButton("Security")
-            self.about_button = QPushButton("About")
+            self.server_button = QPushButton()
+            self.server_button.setFixedSize(80,70)
+            self.server_icon  = QIcon("files/data-server.png")
+            self.server_button.setIcon(self.server_icon)
+            self.server_button.setIconSize(QSize(80,70))
+
+            self.client_button = QPushButton()
+            self.client_icon  = QIcon("files/client.png")
+            self.client_button.setIcon(self.client_icon)
+            self.client_button.setFixedSize(80,70)
+            self.client_button.setIconSize(QSize(80,70))
+            
+            self.serial_button = QPushButton()
+            self.serial_icon  = QIcon("files/db89.png")
+            self.serial_button.setIcon(self.serial_icon)
+            self.serial_button.setFixedSize(80,70)
+            self.serial_button.setIconSize(QSize(80,70))
+
 
             # Add buttons to the left sidebar group box
-            self.left_bar_group_layout.addWidget(self.server_button)
-            self.left_bar_group_layout.addWidget(self.client_button)
-            self.left_bar_group_layout.addWidget(self.serial_button)
-            self.left_bar_group_layout.addWidget(self.network_button)
-            self.left_bar_group_layout.addWidget(self.security_button)
-            self.left_bar_group_layout.addWidget(self.about_button)
+            self.left_bar_group_layout.addRow(self.server_button)
+            self.left_bar_group_layout.addRow(QLabel("Server"))
+            self.left_bar_group_layout.addRow(self.client_button)
+            self.left_bar_group_layout.addRow(QLabel("Client"))
+            self.left_bar_group_layout.addRow(self.serial_button)
+            self.left_bar_group_layout.addRow(QLabel("Serial"))
 
             # Create a label for the right side text
             self.right_text = QLabel("This is the default text.")
@@ -154,6 +164,7 @@ class MainWindow(QMainWindow):
             self.show()
         except Exception as e:
             logging.exception(e)
+            print(e)
 
     def serverConf(self):
         try:
