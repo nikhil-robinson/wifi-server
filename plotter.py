@@ -1,4 +1,4 @@
-from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import QTimer,QTime
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QApplication, QMainWindow, QComboBox, QLabel, QVBoxLayout, QWidget, QHBoxLayout, QLineEdit, QFormLayout
 import pyqtgraph as pg
@@ -38,8 +38,8 @@ class AutoPlotter(QMainWindow):
         widget.setLayout(self.serial_ploter_layout)
         self.setCentralWidget(widget)
 
-        self.x = list(range(100))  # 100 time points
-        self.y = [randint(0,100) for _ in range(100)]  # 100 data points
+        self.x = [0,1]  # 100 time points
+        self.y = [0,1]  # 100 data points
 
         # Create a line series and add it to the plot
         self.series = pg.PlotCurveItem(pen=pg.mkPen(color='r', width=1))
@@ -62,11 +62,19 @@ class AutoPlotter(QMainWindow):
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_plot)
         self.timer.start(self.update_interval)
+
+        self.elapsed_time = QTime(0, 0)
+
     def update_plot(self):
-        self.x = self.x[1:]  # Remove the first y element.
+        self.elapsed_time = self.elapsed_time.addMSecs(self.update_interval)
+
+        # self.x = self.x[1:]  # Remove the first y element.
+        if len(self.x) > 100:
+            self.x = self.x[1:]
         self.x.append(self.x[-1] + 1)  # Add a new value 1 higher than the last.
 
-        self.y = self.y[1:]  # Remove the first
+        if len(self.y) > 100:
+            self.y = self.y[1:]  # Remove the first
         self.y.append( randint(0,100))  # Add a new random value.
 
         self.series.setData(self.x, self.y)  # Update the data.
