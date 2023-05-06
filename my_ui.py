@@ -93,30 +93,33 @@ class MainWindow(QMainWindow):
             # Create buttons for the left sidebar
             self.server_button = QPushButton()
             self.server_button.setFixedSize(80,70)
-            self.server_icon  = QIcon("files/data-server.png")
+            self.server_icon  = QIcon("files/server2.png")
             self.server_button.setIcon(self.server_icon)
             self.server_button.setIconSize(QSize(80,70))
+            self.server_button.setObjectName('serverButton')
 
             self.client_button = QPushButton()
             self.client_icon  = QIcon("files/client.png")
             self.client_button.setIcon(self.client_icon)
             self.client_button.setFixedSize(80,70)
             self.client_button.setIconSize(QSize(80,70))
+            self.client_button.setObjectName('clientButton')
             
             self.serial_button = QPushButton()
             self.serial_icon  = QIcon("files/db89.png")
             self.serial_button.setIcon(self.serial_icon)
             self.serial_button.setFixedSize(80,70)
             self.serial_button.setIconSize(QSize(80,70))
+            self.serial_button.setObjectName('serialButton')
 
 
             # Add buttons to the left sidebar group box
             self.left_bar_group_layout.addRow(self.server_button)
-            self.left_bar_group_layout.addRow(QLabel("Server"))
+            self.left_bar_group_layout.addRow(QLabel(""))
             self.left_bar_group_layout.addRow(self.client_button)
-            self.left_bar_group_layout.addRow(QLabel("Client"))
+            self.left_bar_group_layout.addRow(QLabel(""))
             self.left_bar_group_layout.addRow(self.serial_button)
-            self.left_bar_group_layout.addRow(QLabel("Serial"))
+            self.left_bar_group_layout.addRow(QLabel(""))
 
             # Create a label for the right side text
             self.right_text = QLabel("This is the default text.")
@@ -739,6 +742,7 @@ class MainWindow(QMainWindow):
                 self.serial_baudrate_combo.setDisabled(False)
                 self.serial_connected = False
                 self.serial_p_timer.start()
+                print("port start")
         except Exception as e:
             logging.exception(e)
 
@@ -758,7 +762,14 @@ class MainWindow(QMainWindow):
     def read_serial(self):
         try:
             serial_data = self.serial_port.readAll().data().decode()
-            self.serial_console.append(serial_data)
+            serial_pattern = self.serial_filter_pattern.text()
+            if serial_pattern:
+                serial_pattern = f'.*{serial_pattern}.*'  # Add .* at the beginning and end to match anywhere in the line
+                if re.search(serial_pattern, serial_data):
+                    self.serial_console.append(serial_data)
+            else:
+                self.serial_console.append(serial_data)
+
             if self.serial_console_stop_scroll:
                 self.serial_scrollbar.setValue(self.serial_scroll_pos)
         except Exception as e:
