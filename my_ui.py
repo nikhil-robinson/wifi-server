@@ -159,7 +159,7 @@ class MainWindow(QMainWindow):
             self.serial_button.clicked.connect(self.on_serialButton_clicked)
             
             # Set the window properties
-            self.setWindowTitle("MBOX V1.0 Beta")
+            self.setWindowTitle("MBOX v0.1 Beta")
             self.setGeometry(100, 100, 1000, 600)
             self.show()
         except Exception as e:
