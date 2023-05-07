@@ -7,7 +7,7 @@ import requests
 from PyQt6.QtWidgets import QApplication,QDialog, QMainWindow, QWidget, QVBoxLayout, QGroupBox, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QHBoxLayout, QStackedWidget,QCheckBox
 from PyQt6.QtCore import QProcess, QTimer, QTime, QRegularExpression, QByteArray,QIODevice,QSize
 from PyQt6.QtNetwork import QTcpServer, QTcpSocket, QUdpSocket, QHostAddress, QAbstractSocket
-from PyQt6.QtGui import QRegularExpressionValidator,QIcon,QColor
+from PyQt6.QtGui import QRegularExpressionValidator,QIcon,QColor,QIntValidator
 from PyQt6 import QtSerialPort
 from random import randint
 import pyqtgraph as pg
@@ -813,6 +813,7 @@ class MainWindow(QMainWindow):
     def serial_ploter_open_window(self):
         self.serial_ploter_popup = QDialog(self)
         self.serial_ploter_popup.setWindowTitle('Serial Plotter')
+        self.ploter_started =False
         
         self.serial_ploter_widget = pg.PlotWidget()
 
@@ -821,6 +822,10 @@ class MainWindow(QMainWindow):
         self.serial_ploter_color_combo.addItems(['red', 'green', 'blue', 'black'])
         self.serial_ploter_time_edit = QLineEdit()
         self.serial_ploter_time_edit.setPlaceholderText("Enter time delay in (ms)")
+        self.serial_ploter_time_edit.setValidator(QIntValidator())
+
+        self.ploter_start_button = QPushButton("Start")
+        self.ploter_start_button.clicked.connect(self.ploter_start_ploting)
 
         # Create labels for combo boxes
         self.serial_ploter_color_label = QLabel('Line Color:')
@@ -831,6 +836,7 @@ class MainWindow(QMainWindow):
         self.serial_ploter_layout_organise.addWidget(self.serial_ploter_color_combo)
         self.serial_ploter_layout_organise.addWidget(self.serial_ploter_update_label)
         self.serial_ploter_layout_organise.addWidget(self.serial_ploter_time_edit)
+        self.serial_ploter_layout_organise.addWidget(self.ploter_start_button)
         # self.serial_ploter_layout_organise.addWidget(self.serial_ploter_widget)
 
         # Create a form layout for the widget
@@ -864,7 +870,7 @@ class MainWindow(QMainWindow):
         # Set up timer to update the plot
         self.serial_ploter_triger_timer = QTimer()
         self.serial_ploter_triger_timer.timeout.connect(self.serial_ploter_update_plot)
-        self.serial_ploter_triger_timer.start(self.serial_ploter_update_interval)
+        
 
         self.serial_ploter_elapsed_time = QTime(0, 0)
 
@@ -873,6 +879,25 @@ class MainWindow(QMainWindow):
         
         self.serial_ploter_popup.finished.connect(self.serial_ploter_handle_popup_closed)
         self.serial_ploter_popup.exec()
+    
+    def ploter_start_ploting(self):
+        if not self.ploter_started:
+            if self.serial_ploter_time_edit.text() != "":
+                self.serial_ploter_update_interval = int(self.serial_ploter_time_edit.text())
+            else:
+                self.serial_ploter_update_interval = 100
+            self.serial_ploter_triger_timer.start(self.serial_ploter_update_interval)
+            self.ploter_start_button.setText("Stop")
+            self.serial_ploter_time_edit.setDisabled(True)
+            self.ploter_started = True
+            return
+        self.ploter_start_button.setText("Start")
+        self.serial_ploter_triger_timer.stop()
+        self.serial_ploter_time_edit.setDisabled(False)
+        self.ploter_started =False
+
+
+
 
     def serial_ploter_handle_popup_closed(self, result):
         self.serial_ploter_triger_timer.stop()
