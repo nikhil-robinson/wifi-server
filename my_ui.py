@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import sys
 import logging
 import re
@@ -7,11 +9,13 @@ import requests
 from PyQt6.QtWidgets import QApplication,QDialog, QMainWindow, QWidget, QVBoxLayout, QGroupBox, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QHBoxLayout, QStackedWidget,QCheckBox
 from PyQt6.QtCore import QProcess, QTimer, QTime, QRegularExpression, QByteArray,QIODevice,QSize
 from PyQt6.QtNetwork import QTcpServer, QTcpSocket, QUdpSocket, QHostAddress, QAbstractSocket
-from PyQt6.QtGui import QRegularExpressionValidator,QIcon,QColor,QIntValidator
+from PyQt6.QtGui import QRegularExpressionValidator,QIcon,QColor,QIntValidator,QPalette
 from PyQt6 import QtSerialPort
 from random import randint
 import pyqtgraph as pg
 import paho.mqtt.client as mqtt
+from qt_material import apply_stylesheet
+
 
 class serial_PopupWindow(QDialog):
     def __init__(self, parent=None):
@@ -23,21 +27,27 @@ class serial_PopupWindow(QDialog):
         self.serial_parity_combo.addItems(['NONE', 'EVEN', 'ODD', 'SPACE','MARK'])
 
         parity_layout = QHBoxLayout()
-        parity_layout.addWidget(QLabel("Parity"))
+        parity_label =QLabel("Parity")
+        parity_label.setStyleSheet("color : cyan")
+        parity_layout.addWidget(parity_label)
         parity_layout.addWidget(self.serial_parity_combo)
 
         self.serial_stopbits_combo = QComboBox()
         self.serial_stopbits_combo.addItems(['1','1.5', '2'])
 
         stopbits_layout = QHBoxLayout()
-        stopbits_layout.addWidget(QLabel("Stop Bits"))
+        stopbits_label =QLabel("Stop bits")
+        stopbits_label.setStyleSheet("color : cyan")
+        stopbits_layout.addWidget(stopbits_label)
         stopbits_layout.addWidget(self.serial_stopbits_combo)
 
         self.serial_bytesize_combo = QComboBox()
         self.serial_bytesize_combo.addItems(['5', '6', '7', '8'])
 
         bytesize_layout = QHBoxLayout()
-        bytesize_layout.addWidget(QLabel("Byte size"))
+        bytesize_label = QLabel("Byte size")
+        bytesize_label.setStyleSheet("color : cyan")
+        bytesize_layout.addWidget(bytesize_label)
         bytesize_layout.addWidget(self.serial_bytesize_combo)
 
         ok_button = QPushButton("OK", self)
@@ -87,7 +97,7 @@ class MainWindow(QMainWindow):
             self.main_layout = QHBoxLayout()
 
             # Create a group box for the left sidebar
-            self.left_bar_group = QGroupBox("Tools")
+            self.left_bar_group = QGroupBox()
             self.left_bar_group_layout = QFormLayout()
             self.left_bar_group.setLayout(self.left_bar_group_layout)
 
@@ -187,8 +197,13 @@ class MainWindow(QMainWindow):
             self.server_port_input = QLineEdit()
             self.server_port_input.setPlaceholderText("Enter Port Number")
 
+            
+
             self.server_ip_label =QLabel("IP :")
             self.server_port_label =QLabel("Port :")
+
+            self.server_ip_label.setStyleSheet("color : cyan")
+            self.server_port_label.setStyleSheet("color : cyan")
 
             self.server_ip_input = QLineEdit()
             self.server_ip_input.setPlaceholderText("Enter ip address")
@@ -625,12 +640,24 @@ class MainWindow(QMainWindow):
             self.autoscroll_checkbox.setChecked(True)
             self.autoscroll_checkbox.stateChanged.connect(self.handle_autoscroll_change)
 
+            serial_device_label =QLabel("Device:")
+            serial_device_label.setStyleSheet("color : cyan")
 
-            self.serial_orgnise.addWidget(QLabel("Device:"))
+            serial_baud_label =QLabel("Baud:")
+            serial_baud_label.setStyleSheet("color : cyan")
+
+            serial_lineencoding_label =QLabel("Line Encoding:")
+            serial_lineencoding_label.setStyleSheet("color : cyan")
+
+            self.serial_port_combo.setMinimumWidth(150)
+            self.serial_baudrate_combo.setMinimumWidth(150)
+            self.lineending_combobox.setMinimumWidth(150)
+            
+            self.serial_orgnise.addWidget(serial_device_label)
             self.serial_orgnise.addWidget(self.serial_port_combo)
-            self.serial_orgnise.addWidget(QLabel("Port:"))
+            self.serial_orgnise.addWidget(serial_baud_label)
             self.serial_orgnise.addWidget(self.serial_baudrate_combo)
-            self.serial_orgnise.addWidget(QLabel("Line Encoding:"))
+            self.serial_orgnise.addWidget(serial_lineencoding_label)
             self.serial_orgnise.addWidget(self.lineending_combobox)
             self.serial_orgnise.addWidget(self.autoscroll_checkbox)
             self.serial_orgnise.addWidget(self.serial_connect_button)
@@ -829,7 +856,9 @@ class MainWindow(QMainWindow):
 
         # Create labels for combo boxes
         self.serial_ploter_color_label = QLabel('Line Color:')
+        self.serial_ploter_color_label.setStyleSheet("color : cyan")
         self.serial_ploter_update_label = QLabel('Update Interval (s):')
+        self.serial_ploter_update_label.setStyleSheet("color : cyan")
 
         self.serial_ploter_layout_organise = QHBoxLayout()
         self.serial_ploter_layout_organise.addWidget(self.serial_ploter_color_label)
@@ -945,6 +974,7 @@ class MainWindow(QMainWindow):
             self.client_protocol_combobox.addItem('UDP')
             self.client_protocol_combobox.addItem('TCP')
             self.client_protocol_combobox.addItem('MQTT')
+            self.client_protocol_combobox.setMinimumWidth(150)
             self.client_protocol_combobox.activated.connect(self.on_client_combo_box_activated)
 
 
@@ -980,7 +1010,10 @@ class MainWindow(QMainWindow):
             self.client_link_layout.addWidget(self.client_protocol_combobox)
             # self.client_link_layout.addWidget(QLabel("IP :"))
             self.client_link_layout.addWidget(self.client_ip_edit)
-            self.client_link_layout.addWidget(QLabel(":"))
+            colon_label =QLabel(":")
+            colon_label.setStyleSheet("color : cyan")
+            
+            self.client_link_layout.addWidget(colon_label)
             self.client_link_layout.addWidget(self.client_port_edit)
             self.client_link_layout.addWidget(self.client_connect_button)
 
@@ -989,8 +1022,8 @@ class MainWindow(QMainWindow):
 
             self.client_form_widget = QWidget()
             self.client_form_widget.setLayout(self.client_layout)
-            self.client_send_label = QLabel()
-            self.client_send_label.setText("Send :")
+            self.client_send_label = QLabel("Send :")
+            self.client_send_label.setStyleSheet("color : cyan")
 
             # self.client_layout.addRow('Protocol:', self.client_protocol_combobox)
             self.client_layout.addRow(self.client_link_layout)
@@ -1314,5 +1347,14 @@ if __name__ == "__main__":
     fh.setFormatter(formatter)
     logging.getLogger().addHandler(fh)
     app = QApplication(sys.argv)
+    
+
+    app.setWindowIcon(QIcon('files/data-server.png'))
+    palette = app.palette()
+    
     window = MainWindow()
+    if palette.color(QPalette.ColorRole.WindowText).value() < 146:
+        apply_stylesheet(app, theme='dark_cyan.xml', invert_secondary=False)
+    else:
+        apply_stylesheet(app, theme='light_cyan_500.xml', invert_secondary=True)
     sys.exit(app.exec())
