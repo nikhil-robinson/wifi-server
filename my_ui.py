@@ -5,11 +5,12 @@ import os
 import requests
 
 from PyQt6.QtWidgets import QApplication,QDialog, QMainWindow, QWidget, QVBoxLayout, QGroupBox, QFormLayout, QLabel, QLineEdit, QPushButton, QComboBox, QTextEdit, QHBoxLayout, QStackedWidget,QCheckBox
-from PyQt6.QtCore import QProcess, QTimer, QRegularExpression, QByteArray,QIODevice,QSize
+from PyQt6.QtCore import QProcess, QTimer, QTime, QRegularExpression, QByteArray,QIODevice,QSize
 from PyQt6.QtNetwork import QTcpServer, QTcpSocket, QUdpSocket, QHostAddress, QAbstractSocket
-from PyQt6.QtGui import QRegularExpressionValidator,QIcon
+from PyQt6.QtGui import QRegularExpressionValidator,QIcon,QColor
 from PyQt6 import QtSerialPort
-
+from random import randint
+import pyqtgraph as pg
 import paho.mqtt.client as mqtt
 
 class serial_PopupWindow(QDialog):
@@ -588,6 +589,11 @@ class MainWindow(QMainWindow):
             self.serial_settings_button = QPushButton("Settings")
             self.serial_settings_button.clicked.connect(self.serial_show_popup)
 
+            self.serial_ploter_button = QPushButton("Plotter", self)
+            self.serial_ploter_button.clicked.connect(self.serial_ploter_open_window)
+
+            self.serial_ploter_button.setDisabled(True)
+
             # Create a QLineEdit widget for entering filter serial_pattern
             self.serial_filter_pattern = QLineEdit()
             self.serial_filter_pattern.setPlaceholderText('Enter filter serial_pattern')
@@ -630,6 +636,7 @@ class MainWindow(QMainWindow):
             self.serial_orgnise.addWidget(self.serial_connect_button)
             self.serial_orgnise.addWidget(self.serial_clear_button)
             self.serial_orgnise.addWidget(self.serial_settings_button)
+            self.serial_orgnise.addWidget(self.serial_ploter_button)
             
 
 
@@ -647,7 +654,7 @@ class MainWindow(QMainWindow):
             self.serial = None
             self.serial_connected = False
             self.serial_line_end = b''
-            self.serial_console_stop_scroll = True
+            self.serial_console_stop_scroll = False
             self.serial_scrollbar =self.serial_console.verticalScrollBar()
             self.serial_scroll_pos = self.serial_scrollbar.value()
 
@@ -690,11 +697,11 @@ class MainWindow(QMainWindow):
             
     def handle_autoscroll_change(self, state):
         if state == 2:
-            self.serial_console_stop_scroll = True
+            self.serial_console_stop_scroll = False
             self.serial_scrollbar =self.serial_console.verticalScrollBar()
             self.serial_scroll_pos = self.serial_scrollbar.value()
         else:
-            self.serial_console_stop_scroll = False
+            self.serial_console_stop_scroll = True
 
     def refresh_ports(self):
         try:
@@ -729,6 +736,7 @@ class MainWindow(QMainWindow):
                 self.serial_settings_button.setDisabled(True)
                 self.serial_port_combo.setDisabled(True)
                 self.serial_baudrate_combo.setDisabled(True)
+                self.serial_ploter_button.setDisabled(False)
                 self.serial_connected = True
 
 
@@ -740,6 +748,7 @@ class MainWindow(QMainWindow):
                 self.serial_settings_button.setDisabled(False)
                 self.serial_port_combo.setDisabled(False)
                 self.serial_baudrate_combo.setDisabled(False)
+                self.serial_ploter_button.setDisabled(True)
                 self.serial_connected = False
                 self.serial_p_timer.start()
                 print("port start")
@@ -761,14 +770,14 @@ class MainWindow(QMainWindow):
 
     def read_serial(self):
         try:
-            serial_data = self.serial_port.readAll().data().decode()
+            self.serial_data = self.serial_port.readAll().data().decode()
             serial_pattern = self.serial_filter_pattern.text()
             if serial_pattern:
                 serial_pattern = f'.*{serial_pattern}.*'  # Add .* at the beginning and end to match anywhere in the line
-                if re.search(serial_pattern, serial_data):
-                    self.serial_console.append(serial_data)
+                if re.search(serial_pattern, self.serial_data):
+                    self.serial_console.append(self.serial_data)
             else:
-                self.serial_console.append(serial_data)
+                self.serial_console.append(self.serial_data)
 
             if self.serial_console_stop_scroll:
                 self.serial_scrollbar.setValue(self.serial_scroll_pos)
@@ -798,6 +807,105 @@ class MainWindow(QMainWindow):
                 self.serial_console.setPlainText(serial_filtered_text)
         except Exception as e:
             logging.exception(e)
+
+
+
+    def serial_ploter_open_window(self):
+        self.serial_ploter_popup = QDialog(self)
+        self.serial_ploter_popup.setWindowTitle('Serial Plotter')
+        
+        self.serial_ploter_widget = pg.PlotWidget()
+
+        # Create combo boxes for line colors and update interval
+        self.serial_ploter_color_combo = QComboBox()
+        self.serial_ploter_color_combo.addItems(['red', 'green', 'blue', 'black'])
+        self.serial_ploter_time_edit = QLineEdit()
+        self.serial_ploter_time_edit.setPlaceholderText("Enter time delay in (ms)")
+
+        # Create labels for combo boxes
+        self.serial_ploter_color_label = QLabel('Line Color:')
+        self.serial_ploter_update_label = QLabel('Update Interval (s):')
+
+        self.serial_ploter_layout_organise = QHBoxLayout()
+        self.serial_ploter_layout_organise.addWidget(self.serial_ploter_color_label)
+        self.serial_ploter_layout_organise.addWidget(self.serial_ploter_color_combo)
+        self.serial_ploter_layout_organise.addWidget(self.serial_ploter_update_label)
+        self.serial_ploter_layout_organise.addWidget(self.serial_ploter_time_edit)
+        # self.serial_ploter_layout_organise.addWidget(self.serial_ploter_widget)
+
+        # Create a form layout for the widget
+        self.serial_ploter_layout = QFormLayout()
+        # self.serial_ploter_layout.addRow(self.serial_ploter_color_label, self.serial_ploter_color_combo)
+        # self.serial_ploter_layout.addRow(self.serial_ploter_update_label, self.serial_ploter_time_edit)
+        self.serial_ploter_layout.addRow(self.serial_ploter_layout_organise)
+        self.serial_ploter_layout.addRow(self.serial_ploter_widget)
+
+
+        self.serial_ploter_x = [0,1]  # 100 time points
+        self.serial_ploter_y = [0,1]  # 100 data points
+
+        # Create a line series and add it to the plot
+        self.serial_ploter_line = pg.PlotCurveItem(pen=pg.mkPen(color='r', width=1))
+        self.serial_ploter_widget.addItem(self.serial_ploter_line)
+
+        # Set plot title and axes labels
+        self.serial_ploter_widget.setTitle('Auto Plotter')
+        self.serial_ploter_widget.setLabel('bottom', 'Time', units='s')
+        self.serial_ploter_widget.setLabel('left', 'Value')
+
+        # Connect combo boxes to update line color and interval
+        self.serial_ploter_color_combo.currentTextChanged.connect(self.update_line_color)
+        self.serial_ploter_time_edit.textChanged.connect(self.update_update_interval)
+
+        # Set initial values for line color and update interval
+        self.serial_ploter_line_colour = QColor('red')
+        self.serial_ploter_update_interval = 100
+
+        # Set up timer to update the plot
+        self.serial_ploter_triger_timer = QTimer()
+        self.serial_ploter_triger_timer.timeout.connect(self.serial_ploter_update_plot)
+        self.serial_ploter_triger_timer.start(self.serial_ploter_update_interval)
+
+        self.serial_ploter_elapsed_time = QTime(0, 0)
+
+
+        self.serial_ploter_popup.setLayout(self.serial_ploter_layout)
+        
+        self.serial_ploter_popup.finished.connect(self.serial_ploter_handle_popup_closed)
+        self.serial_ploter_popup.exec()
+
+    def serial_ploter_handle_popup_closed(self, result):
+        self.serial_ploter_triger_timer.stop()
+        print("Closed")
+
+    def serial_ploter_update_plot(self):
+        self.serial_ploter_elapsed_time = self.serial_ploter_elapsed_time.addMSecs(self.serial_ploter_update_interval)
+
+        # self.serial_ploter_x = self.serial_ploter_x[1:]  # Remove the first y element.
+        if len(self.serial_ploter_x) > 100:
+            self.serial_ploter_x = self.serial_ploter_x[1:]
+        self.serial_ploter_x.append(self.serial_ploter_x[-1] + 1)  # Add a new value 1 higher than the last.
+
+        if len(self.serial_ploter_y) > 100:
+            self.serial_ploter_y = self.serial_ploter_y[1:]  # Remove the first
+        if "MPLOT:" in self.serial_data:
+            self.serial_ploter_y.append( int(self.serial_data.strip("MPLOT:")))  # Add a new random value.
+        else:
+            self.serial_ploter_y.append(0)
+
+        self.serial_ploter_line.setData(self.serial_ploter_x, self.serial_ploter_y)  # Update the data.
+
+
+    def update_line_color(self, color):
+        # Update the line color based on the selected combo box value
+        self.serial_ploter_line_colour = QColor(color)
+        self.serial_ploter_line.setPen(pg.mkPen(color=self.serial_ploter_line_colour, width=1))
+
+    def update_update_interval(self, interval):
+        # Update the update interval based on the selected combo box value
+        self.serial_ploter_update_interval = int(interval) * 1000
+        self.serial_ploter_triger_timer.setInterval(self.serial_ploter_update_interval)
+
 
 
 
