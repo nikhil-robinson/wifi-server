@@ -636,7 +636,7 @@ class MainWindow(QMainWindow):
             
             # self.serial_form_layout.addRow(self.serial_filter_pattern, self.serial_filter_button)
 
-            self.autoscroll_checkbox = QCheckBox('Enable Autoscroll')
+            self.autoscroll_checkbox = QCheckBox()
             self.autoscroll_checkbox.setChecked(True)
             self.autoscroll_checkbox.stateChanged.connect(self.handle_autoscroll_change)
 
@@ -649,6 +649,9 @@ class MainWindow(QMainWindow):
             serial_lineencoding_label =QLabel("Line Encoding:")
             serial_lineencoding_label.setStyleSheet("color : cyan")
 
+            serial_enableautoscroll_label =QLabel('Enable Autoscroll')
+            serial_enableautoscroll_label.setStyleSheet("color : cyan")
+
             self.serial_port_combo.setMinimumWidth(150)
             self.serial_baudrate_combo.setMinimumWidth(150)
             self.lineending_combobox.setMinimumWidth(150)
@@ -660,6 +663,7 @@ class MainWindow(QMainWindow):
             self.serial_orgnise.addWidget(serial_lineencoding_label)
             self.serial_orgnise.addWidget(self.lineending_combobox)
             self.serial_orgnise.addWidget(self.autoscroll_checkbox)
+            self.serial_orgnise.addWidget(serial_enableautoscroll_label)
             self.serial_orgnise.addWidget(self.serial_connect_button)
             self.serial_orgnise.addWidget(self.serial_clear_button)
             self.serial_orgnise.addWidget(self.serial_settings_button)
